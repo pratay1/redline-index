@@ -84,7 +84,7 @@ export function HomeHero({ featuredHref, featuredLabel }: HomeHeroProps) {
         </div>
 
         <motion.div
-          className="pointer-events-none relative mt-8 w-full max-w-4xl lg:pointer-events-auto lg:absolute lg:top-8 lg:right-0 lg:mt-0 lg:w-[68%]"
+          className="pointer-events-none relative mt-8 w-full max-w-4xl lg:pointer-events-auto lg:absolute lg:top-8 lg:-right-3 lg:mt-0 lg:w-[64%]"
           initial={reduceMotion ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.85, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
