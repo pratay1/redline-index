@@ -43,6 +43,15 @@ const bmw330iImageSource = {
   publishedAt: new Date("2024-05-23T00:00:00.000Z"),
 };
 
+const bmwM340iImageSource = {
+  slug: "bmw-m340i-exterior-image-p90479559",
+  title: "The new BMW M340i xDrive – Exterior (09/2022)",
+  publisher: "BMW Group",
+  url: "https://www.press.bmwgroup.com/usa/photo/detail/P90479559/The-new-BMW-M340i-xDrive-09-2022",
+  type: "MANUFACTURER" as const,
+  publishedAt: new Date("2022-09-20T00:00:00.000Z"),
+};
+
 async function upsertCitation(
   sourceId: string,
   entityType: string,
@@ -185,10 +194,15 @@ async function main() {
     create: bmwM340iFuelEconomySourceData,
     update: bmwM340iFuelEconomySourceData,
   });
-  const imageSource = await prisma.source.upsert({
+  const bmw330iImageSourceRecord = await prisma.source.upsert({
     where: { slug: bmw330iImageSource.slug },
     create: bmw330iImageSource,
     update: bmw330iImageSource,
+  });
+  const bmwM340iImageSourceRecord = await prisma.source.upsert({
+    where: { slug: bmwM340iImageSource.slug },
+    create: bmwM340iImageSource,
+    update: bmwM340iImageSource,
   });
   const pricingDate = new Date("2024-05-29T00:00:00.000Z");
 
@@ -404,16 +418,34 @@ async function main() {
     where: { vehicleId_position: { vehicleId: bmw330i.id, position: 0 } },
     create: {
       vehicleId: bmw330i.id,
-      sourceId: imageSource.id,
+      sourceId: bmw330iImageSourceRecord.id,
       url: "https://mediapool.bmwgroup.com/cache/P9/202405/P90549617/P90549617-the-new-bmw-330i-sedan-exterior-05-2024-2250px.jpg",
       alt: "2025 BMW 330i Sedan exterior",
       credit: "BMW Group",
       position: 0,
     },
     update: {
-      sourceId: imageSource.id,
+      sourceId: bmw330iImageSourceRecord.id,
       url: "https://mediapool.bmwgroup.com/cache/P9/202405/P90549617/P90549617-the-new-bmw-330i-sedan-exterior-05-2024-2250px.jpg",
       alt: "2025 BMW 330i Sedan exterior",
+      credit: "BMW Group",
+    },
+  });
+
+  await prisma.vehicleImage.upsert({
+    where: { vehicleId_position: { vehicleId: bmwM340i.id, position: 0 } },
+    create: {
+      vehicleId: bmwM340i.id,
+      sourceId: bmwM340iImageSourceRecord.id,
+      url: "https://mediapool.bmwgroup.com/cache/P9/202209/P90479559/P90479559-the-new-bmw-m340i-xdrive-09-2022-2250px.jpg",
+      alt: "2025 BMW M340i Sedan exterior",
+      credit: "BMW Group",
+      position: 0,
+    },
+    update: {
+      sourceId: bmwM340iImageSourceRecord.id,
+      url: "https://mediapool.bmwgroup.com/cache/P9/202209/P90479559/P90479559-the-new-bmw-m340i-xdrive-09-2022-2250px.jpg",
+      alt: "2025 BMW M340i Sedan exterior",
       credit: "BMW Group",
     },
   });
