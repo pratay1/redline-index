@@ -15,17 +15,17 @@ export function SpecificationGroup({
   if (!populatedItems.length) return null;
 
   return (
-    <section className="border-t border-white/15 pt-5">
-      <h2 className="font-mono text-[0.65rem] tracking-[0.14em] text-[var(--signal)] uppercase">
+    <section className="border-t border-line pt-6">
+      <h2 className="font-mono text-[0.65rem] tracking-[0.14em] text-signal uppercase">
         {title}
       </h2>
-      <dl className="mt-4 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+      <dl className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
         {populatedItems.map((item) => (
-          <div key={item.label} className="border-b border-white/10 pb-3">
-            <dt className="font-mono text-[0.6rem] tracking-[0.12em] text-[var(--muted)] uppercase">
+          <div key={item.label} className="border-b border-line/80 pb-4">
+            <dt className="font-mono text-[0.6rem] tracking-[0.12em] text-muted uppercase">
               {item.label}
             </dt>
-            <dd className="mt-1 text-sm font-medium text-white">{item.value}</dd>
+            <dd className="mt-1.5 text-sm font-medium text-white">{item.value}</dd>
           </div>
         ))}
       </dl>

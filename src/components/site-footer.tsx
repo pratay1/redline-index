@@ -1,25 +1,42 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/brand-mark";
+import { Container } from "@/components/container";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 font-mono text-[0.62rem] tracking-[0.12em] text-[var(--muted)] uppercase sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10">
-        <p>Redline Index · Verified vehicle records, built to last.</p>
-        <div className="flex gap-5">
+    <footer className="mt-auto border-t border-line">
+      <Container className="flex flex-col gap-8 py-12 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-4">
+          <BrandMark />
+          <p className="max-w-sm text-sm leading-6 text-muted">
+            Verified vehicle records, built to last. Manufacturer specs with sources
+            behind every number.
+          </p>
+        </div>
+        <nav
+          aria-label="Footer"
+          className="flex flex-wrap gap-x-6 gap-y-3 font-mono text-[0.62rem] tracking-[0.14em] text-muted uppercase"
+        >
+          <Link
+            href="/browse"
+            className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
+          >
+            Browse
+          </Link>
           <Link
             href="/manufacturers"
-            className="hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--signal)]"
+            className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
           >
             Manufacturers
           </Link>
           <Link
             href="/search"
-            className="hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--signal)]"
+            className="transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
           >
             Search
           </Link>
-        </div>
-      </div>
+        </nav>
+      </Container>
     </footer>
   );
 }

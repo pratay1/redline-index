@@ -5,11 +5,16 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import "./globals.css";
 
-const manrope = Manrope({ variable: "--font-manrope", subsets: ["latin"] });
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+  display: "swap",
+});
 const dmMono = DM_Mono({
   variable: "--font-dm-mono",
   weight: ["400", "500"],
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,10 +36,15 @@ export default function RootLayout({
       lang="en"
       className={`${manrope.variable} ${dmMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col bg-background text-foreground">
         <ClerkProvider>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
           <SiteHeader />
-          <div className="flex-1">{children}</div>
+          <div id="main-content" className="flex-1">
+            {children}
+          </div>
           <SiteFooter />
         </ClerkProvider>
       </body>

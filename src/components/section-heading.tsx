@@ -12,10 +12,10 @@ export function SectionHeading({
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p className="font-mono text-[0.65rem] tracking-[0.15em] text-[var(--signal)] uppercase">
+        <p className="font-mono text-[0.65rem] tracking-[0.16em] text-signal uppercase">
           {eyebrow}
         </p>
-        <h2 className="mt-2 text-3xl font-semibold tracking-[-0.05em] text-white sm:text-4xl">
+        <h2 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-4xl">
           {title}
         </h2>
       </div>

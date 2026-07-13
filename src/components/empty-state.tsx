@@ -17,20 +17,18 @@ export function EmptyState({
   linkLabel,
 }: EmptyStateProps) {
   return (
-    <section className="border border-dashed border-white/20 bg-white/[0.02] px-6 py-14 text-center sm:px-10">
-      <p className="font-mono text-[0.65rem] tracking-[0.14em] text-[var(--signal)] uppercase">
+    <section className="border border-dashed border-line bg-surface px-6 py-16 text-center sm:px-10">
+      <p className="font-mono text-[0.65rem] tracking-[0.14em] text-signal uppercase">
         {eyebrow}
       </p>
-      <h2 className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-white">
+      <h2 className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-white">
         {title}
       </h2>
-      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[var(--muted)]">
-        {description}
-      </p>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted">{description}</p>
       {href && linkLabel ? (
         <Link
           href={href}
-          className="mt-6 inline-block border-b border-[var(--signal)] pb-1 font-mono text-[0.65rem] tracking-[0.13em] text-white uppercase hover:text-[var(--signal)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--signal)]"
+          className="mt-7 inline-block border-b border-signal pb-1 font-mono text-[0.65rem] tracking-[0.13em] text-white uppercase transition-colors hover:text-signal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
         >
           {linkLabel}
         </Link>
