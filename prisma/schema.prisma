@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  MEMBER
+  EDITOR
+  ADMIN
+}
+
+enum VehicleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum BodyStyle {
+  CABRIOLET
+  COUPE
+  CROSSOVER
+  HATCHBACK
+  ROADSTER
+  SEDAN
+  SUV
+  TRUCK
+  VAN
+  WAGON
+}
+
+enum FuelType {
+  DIESEL
+  ELECTRIC
+  FLEX_FUEL
+  HYBRID
+  HYDROGEN
+  PETROL
+  PLUG_IN_HYBRID
+}
+
+enum Drivetrain {
+  FWD
+  RWD
+  AWD
+  FOUR_WD
+}
+
+enum TransmissionType {
+  AUTOMATIC
+  CVT
+  DUAL_CLUTCH
+  MANUAL
+  SINGLE_SPEED
+}
+
+model User {
+  id String @id @default(cuid())
+  clerkId String @unique
+  email String? @unique
+  name String?
+  role UserRole @default(MEMBER)
+  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authoredVehicles Vehicle[] @relation("VehicleAuthor")
+  auditLogs AuditLog[]
+  @@index([role])
+}
+
+model Manufacturer {
+  id String @id @default(cuid())
+  name String
+  slug String @unique
+  country String?
+  foundedIn Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  vehicles Vehicle[]
+  @@index([name])
+}
+
+model Vehicle {
+  id String @id @default(cuid())
+  slug String @unique
+  manufacturerId String
+  modelName String
+  trimName String?
+  generation String?
+  year Int
+  bodyStyle BodyStyle?
+  fuelType FuelType?
+  drivetrain Drivetrain?
+  transmission TransmissionType?
+  engineName String?
+  engineDisplacementCc Int?
+  cylinderCount Int?
+  induction String?
+  powerHp Int?
+  torqueLbFt Int?
+  zeroToSixtySeconds Float?
+  topSpeedMph Int?
+  curbWeightKg Int?
+  msrpCents Int?
+  description String?
+  status VehicleStatus @default(DRAFT)
+  publishedAt DateTime?
+  createdById String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  manufacturer Manufacturer @relation(fields: [manufacturerId], references: [id], onDelete: Restrict)
+  createdBy User @relation("VehicleAuthor", fields: [createdById], references: [id], onDelete: Restrict)
+  images VehicleImage[]
+  references VehicleReference[]
+  @@index([status, publishedAt])
+  @@index([manufacturerId, modelName, year])
+  @@index([year])
+  @@index([bodyStyle])
+  @@index([fuelType])
+  @@index([powerHp])
+}
+
+model VehicleImage {
+  id String @id @default(cuid())
+  vehicleId String
+  url String
+  alt String
+  position Int @default(0)
+  createdAt DateTime @default(now())
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  @@unique([vehicleId, position])
+}
+
+model VehicleReference {
+  id String @id @default(cuid())
+  vehicleId String
+  sourceName String
+  sourceUrl String
+  accessedAt DateTime?
+  createdAt DateTime @default(now())
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  @@unique([vehicleId, sourceUrl])
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+  actorId String
+  action String
+  entityType String
+  entityId String
+  metadata Json?
+  createdAt DateTime @default(now())
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  @@index([entityType, entityId])
+  @@index([actorId, createdAt])
+}
