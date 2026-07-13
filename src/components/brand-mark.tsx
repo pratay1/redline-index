@@ -4,47 +4,22 @@ export function BrandMark() {
   return (
     <Link
       href="/"
-      className="group inline-flex items-center gap-3.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
+      className="group inline-flex items-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
       aria-label="Redline Index home"
     >
-      <span className="relative grid size-9 place-items-center">
+      <span className="relative inline-flex items-baseline gap-2 py-1 text-[0.9rem] leading-none font-extrabold tracking-[0.14em] uppercase sm:text-[1rem]">
         <span
-          aria-hidden="true"
-          className="absolute inset-0 border border-signal/90 transition-colors duration-200 group-hover:bg-signal"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute inset-[3px] border border-signal/40 transition-colors duration-200 group-hover:border-black/35"
-        />
-        {/* Corner ticks */}
-        <span
-          aria-hidden="true"
-          className="absolute top-0 left-0 h-1.5 w-1.5 border-t border-l border-signal"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute top-0 right-0 h-1.5 w-1.5 border-t border-r border-signal"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute bottom-0 left-0 h-1.5 w-1.5 border-b border-l border-signal"
-        />
-        <span
-          aria-hidden="true"
-          className="absolute right-0 bottom-0 h-1.5 w-1.5 border-r border-b border-signal"
-        />
-        <span className="relative font-mono text-[0.7rem] font-medium tracking-[0.08em] text-signal transition-colors duration-200 group-hover:text-black">
-          RI
-        </span>
-      </span>
-
-      <span className="hidden leading-none sm:block">
-        <span className="block text-[0.78rem] font-semibold tracking-[0.18em] text-foreground uppercase transition-colors duration-200 group-hover:text-white">
+          className="text-foreground transition-colors duration-200 group-hover:text-white"
+        >
           Redline
         </span>
-        <span className="mt-1 block font-mono text-[0.58rem] tracking-[0.28em] text-muted uppercase transition-colors duration-200 group-hover:text-signal">
+        <span className="text-signal transition-colors duration-200 group-hover:text-white">
           Index
         </span>
+        <span
+          aria-hidden="true"
+          className="bg-signal absolute right-0 -bottom-0.5 h-px w-8 origin-right transition-transform duration-200 group-hover:scale-x-150"
+        />
       </span>
     </Link>
   );
