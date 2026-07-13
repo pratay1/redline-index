@@ -14,6 +14,15 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   typedRoutes: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "mediapool.bmwgroup.com",
+        pathname: "/cache/**",
+      },
+    ],
+  },
   turbopack: {
     root: process.cwd(),
   },

@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b0c0d;
+  --background: #08090a;
   --foreground: #f5f2eb;
-  --muted: #9c9a94;
-  --line: #2a2c2e;
+  --muted: #9b9d9b;
+  --line: #2b2e30;
   --signal: #ef3d2f;
 }
 
@@ -23,9 +23,21 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-manrope), sans-serif;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 72px 72px;
 }
 
 ::selection {
   background: var(--signal);
   color: white;
+}
+
+.grid-fade {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
 }
