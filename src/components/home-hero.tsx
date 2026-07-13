@@ -15,7 +15,7 @@ export function HomeHero({ featuredHref, featuredLabel }: HomeHeroProps) {
 
   return (
     <section className="relative isolate overflow-hidden bg-background">
-      <div className="relative mx-auto min-h-[min(88dvh,52rem)] max-w-7xl px-5 py-12 sm:px-8 lg:px-10 lg:py-14">
+      <div className="relative mx-auto flex min-h-[min(88dvh,52rem)] max-w-7xl flex-col justify-center px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-20">
         <div className="relative z-10 grid max-w-xl gap-6 lg:max-w-2xl">
           <motion.p
             className="font-mono text-[0.65rem] tracking-[0.18em] text-signal uppercase"
