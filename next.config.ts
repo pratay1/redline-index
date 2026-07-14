@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         hostname: "mediapool.bmwgroup.com",
         pathname: "/cache/**",
       },
+      {
+        protocol: "https",
+        hostname: "mediapool.bmwgroup.com",
+        pathname: "/download/**",
+      },
     ],
   },
   turbopack: {
