@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #08090a;
-  --surface: #0c0d0f;
-  --surface-raised: #121416;
-  --foreground: #f5f2eb;
-  --muted: #9a9c9a;
-  --line: #2a2c2e;
-  --signal: #ef3d2f;
-  --signal-hover: #ff5a4a;
+  --background: #030303;
+  --surface: #0e0e0e;
+  --surface-raised: #161616;
+  --foreground: #ffffff;
+  --muted: #a3a3a3;
+  --line: rgba(255, 255, 255, 0.12);
+  --signal: #ffffff;
+  --signal-hover: #e5e5e5;
+  --brand: #ef3d2f;
+  --brand-hover: #ff5a4a;
+  --glass: #121212;
+  --glass-border: rgba(255, 255, 255, 0.12);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -21,8 +25,13 @@
   --color-line: var(--line);
   --color-signal: var(--signal);
   --color-signal-hover: var(--signal-hover);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-dm-mono);
+  --font-display: var(--font-syne);
 }
 
 * {
@@ -56,7 +65,7 @@ body {
 }
 
 ::selection {
-  background: var(--signal);
+  background: var(--brand);
   color: white;
 }
 
@@ -75,8 +84,8 @@ p {
   left: 1rem;
   top: -3rem;
   z-index: 100;
-  background: var(--signal);
-  color: black;
+  background: var(--brand);
+  color: white;
   padding: 0.5rem 1rem;
   font-family: var(--font-dm-mono), monospace;
   font-size: 0.65rem;

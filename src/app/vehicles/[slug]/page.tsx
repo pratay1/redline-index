@@ -58,7 +58,7 @@ export default async function VehicleDetailPage({ params }: Props) {
 
   return (
     <main>
-      <section className="border-b border-line bg-surface">
+      <section className="border-b border-line">
         <Container className="py-8">
           <Breadcrumbs
             items={[
@@ -132,7 +132,7 @@ export default async function VehicleDetailPage({ params }: Props) {
               </div>
             )}
             {heroImage ? (
-              <div className="absolute inset-x-0 bottom-0 bg-black/65 px-5 pt-14 pb-5 font-mono text-[0.58rem] tracking-[0.12em] text-white/70 uppercase">
+              <div className="absolute inset-x-0 bottom-0 bg-[#080808] px-5 pt-14 pb-5 font-mono text-[0.58rem] tracking-[0.12em] text-white/70 uppercase">
                 {heroImage.credit ?? "Image credit unavailable"}
               </div>
             ) : null}
@@ -309,11 +309,11 @@ export default async function VehicleDetailPage({ params }: Props) {
         </aside>
       </Container>
 
-      <section className="border-t border-line bg-surface">
+      <section className="border-t border-line">
         <Container className="py-14 sm:py-16">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="font-mono text-[0.65rem] tracking-[0.14em] text-signal uppercase">
+              <p className="font-mono text-[0.65rem] tracking-[0.14em] text-white/45 uppercase">
                 Same year, same generation
               </p>
               <h2 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-white">
@@ -322,7 +322,7 @@ export default async function VehicleDetailPage({ params }: Props) {
             </div>
             <Link
               href={`/manufacturers/${manufacturer.slug}/${model.slug}`}
-              className="font-mono text-[0.64rem] tracking-[0.13em] text-muted uppercase transition-colors hover:text-signal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
+              className="font-mono text-[0.64rem] tracking-[0.13em] text-muted uppercase transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               Model record →
             </Link>

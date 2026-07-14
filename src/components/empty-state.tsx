@@ -17,8 +17,8 @@ export function EmptyState({
   linkLabel,
 }: EmptyStateProps) {
   return (
-    <section className="border border-dashed border-line bg-surface px-6 py-16 text-center sm:px-10">
-      <p className="font-mono text-[0.65rem] tracking-[0.14em] text-signal uppercase">
+    <section className="border border-dashed border-line bg-[#0e0e0e] px-6 py-16 text-center sm:px-10">
+      <p className="font-mono text-[0.65rem] tracking-[0.14em] text-white/45 uppercase">
         {eyebrow}
       </p>
       <h2 className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-white">
@@ -28,7 +28,7 @@ export function EmptyState({
       {href && linkLabel ? (
         <Link
           href={href}
-          className="mt-7 inline-block border-b border-signal pb-1 font-mono text-[0.65rem] tracking-[0.13em] text-white uppercase transition-colors hover:text-signal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
+          className="mt-7 inline-block border-b border-white pb-1 font-mono text-[0.65rem] tracking-[0.13em] text-white uppercase transition-colors hover:text-white/70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
           {linkLabel}
         </Link>

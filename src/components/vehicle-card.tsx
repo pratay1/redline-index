@@ -16,14 +16,14 @@ export function VehicleCard({ vehicle }: { vehicle: VehicleCardData }) {
     <motion.article
       whileHover={reduceMotion ? undefined : { y: -3 }}
       transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative flex min-w-0 flex-col border border-line bg-surface-raised transition-[border-color] duration-300 hover:border-signal/70"
+      className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-white/12 bg-[#0e0e0e] transition-[border-color,background-color] duration-300 hover:border-white/25 hover:bg-[#141414]"
     >
       <Link
         href={`/vehicles/${vehicle.slug}`}
-        className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-signal"
+        className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
         aria-label={`View ${modelYear.year} ${manufacturer.name} ${modelYear.generation.model.name} ${vehicle.name}`}
       />
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-line bg-surface">
+      <div className="relative aspect-[16/10] overflow-hidden border-b border-white/10 bg-black">
         {image ? (
           <Image
             src={image.url}
@@ -39,20 +39,20 @@ export function VehicleCard({ vehicle }: { vehicle: VehicleCardData }) {
             </span>
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-black/50" />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#080808] to-[#08080800]" />
         <span className="absolute right-3 bottom-3 font-mono text-[0.6rem] tracking-[0.13em] text-white/80 uppercase">
           {vehicle.market}
         </span>
       </div>
       <div className="relative p-5 sm:p-6">
-        <p className="font-mono text-[0.62rem] tracking-[0.13em] text-muted uppercase">
+        <p className="font-mono text-[0.62rem] tracking-[0.13em] text-white/45 uppercase">
           {manufacturer.name} · {modelYear.year} · {modelYear.generation.code}
         </p>
         <h3 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-white">
           {modelYear.generation.model.name}{" "}
-          <span className="text-signal">{vehicle.name}</span>
+          <span className="text-brand">{vehicle.name}</span>
         </h3>
-        <div className="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4 font-mono text-[0.59rem] tracking-[0.08em] text-muted uppercase">
+        <div className="mt-5 grid grid-cols-3 gap-3 border-t border-white/10 pt-4 font-mono text-[0.59rem] tracking-[0.08em] text-white/45 uppercase">
           <span>
             <strong className="block text-sm font-medium tracking-normal text-white">
               {performance?.powerHp ?? "—"}

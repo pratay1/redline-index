@@ -93,7 +93,7 @@ export default async function ManufacturerPage({ params }: Props) {
                   <StaggerItem key={model.id}>
                     <Link
                       href={`/manufacturers/${manufacturer.slug}/${model.slug}`}
-                      className="group block border border-line bg-surface p-6 transition-[border-color,background-color] duration-300 hover:border-signal/70 hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-signal sm:p-8"
+                      className="group block border border-line bg-[#0e0e0e] p-6 transition-[border-color,background-color] duration-300 hover:border-white/30 hover:bg-[#161616] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white sm:p-8"
                     >
                       <p className="font-mono text-[0.62rem] tracking-[0.14em] text-muted uppercase">
                         {firstGeneration?.displayName ??
