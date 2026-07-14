@@ -33,14 +33,17 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const imageUrls = await getPublishedVehicleImageUrls();
+  const imageUrls = [
+    ...(await getPublishedVehicleImageUrls()),
+    "/thisisnthardtocodeatall.png",
+  ];
 
   return (
     <html
       lang="en"
       className={`${manrope.variable} ${dmMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-background text-foreground">
+      <body className="bg-background text-foreground flex min-h-full flex-col">
         <ClerkProvider>
           <CatalogImagePrefetch imageUrls={imageUrls} />
           <a href="#main-content" className="skip-link">

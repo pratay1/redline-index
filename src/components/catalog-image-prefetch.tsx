@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 const imageWidths = [640, 750, 828, 1080, 1200, 1920] as const;
 const imageSizes = "(min-width: 1024px) 55vw, (min-width: 640px) 50vw, 100vw";
+const prefetchedImageUrls = new Set<string>();
 
 type NetworkInformation = {
   effectiveType?: string;
@@ -25,6 +26,17 @@ function optimizedImageUrl(url: string, width: number) {
   return `/_next/image?url=${encodeURIComponent(url)}&w=${width}&q=75`;
 }
 
+async function enablePersistentImageCache() {
+  if (!("serviceWorker" in navigator)) return;
+
+  try {
+    await navigator.serviceWorker.register("/image-cache-worker.js", { scope: "/" });
+    await navigator.serviceWorker.ready;
+  } catch {
+    // Browser prefetch remains useful if service workers are unavailable.
+  }
+}
+
 /**
  * Warms the browser cache with the same optimized, responsive assets rendered by
  * next/image. Work starts only after initial rendering is idle and remains low priority.
@@ -35,6 +47,9 @@ export function CatalogImagePrefetch({ imageUrls }: { imageUrls: string[] }) {
 
     const addPrefetchLinks = () => {
       for (const imageUrl of new Set(imageUrls)) {
+        if (prefetchedImageUrls.has(imageUrl)) continue;
+        prefetchedImageUrls.add(imageUrl);
+
         const link = document.createElement("link");
         link.rel = "prefetch";
         link.as = "image";
@@ -55,13 +70,24 @@ export function CatalogImagePrefetch({ imageUrls }: { imageUrls: string[] }) {
       ) => number;
     };
 
-    if (browserWindow.requestIdleCallback) {
-      browserWindow.requestIdleCallback(addPrefetchLinks, { timeout: 3_000 });
-      return;
-    }
+    let cancelled = false;
+    let timeout: number | undefined;
 
-    const timeout = window.setTimeout(addPrefetchLinks, 1_500);
-    return () => window.clearTimeout(timeout);
+    void enablePersistentImageCache().finally(() => {
+      if (cancelled) return;
+
+      if (browserWindow.requestIdleCallback) {
+        browserWindow.requestIdleCallback(addPrefetchLinks, { timeout: 3_000 });
+        return;
+      }
+
+      timeout = window.setTimeout(addPrefetchLinks, 1_500);
+    });
+
+    return () => {
+      cancelled = true;
+      if (timeout) window.clearTimeout(timeout);
+    };
   }, [imageUrls]);
 
   return null;
