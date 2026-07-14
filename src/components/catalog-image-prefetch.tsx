@@ -1,0 +1,68 @@
+"use client";
+
+import { useEffect } from "react";
+
+const imageWidths = [640, 750, 828, 1080, 1200, 1920] as const;
+const imageSizes = "(min-width: 1024px) 55vw, (min-width: 640px) 50vw, 100vw";
+
+type NetworkInformation = {
+  effectiveType?: string;
+  saveData?: boolean;
+};
+
+function shouldPrefetchImages() {
+  const connection = (navigator as Navigator & { connection?: NetworkInformation })
+    .connection;
+
+  return (
+    !connection?.saveData &&
+    connection?.effectiveType !== "slow-2g" &&
+    connection?.effectiveType !== "2g"
+  );
+}
+
+function optimizedImageUrl(url: string, width: number) {
+  return `/_next/image?url=${encodeURIComponent(url)}&w=${width}&q=75`;
+}
+
+/**
+ * Warms the browser cache with the same optimized, responsive assets rendered by
+ * next/image. Work starts only after initial rendering is idle and remains low priority.
+ */
+export function CatalogImagePrefetch({ imageUrls }: { imageUrls: string[] }) {
+  useEffect(() => {
+    if (!shouldPrefetchImages()) return;
+
+    const addPrefetchLinks = () => {
+      for (const imageUrl of new Set(imageUrls)) {
+        const link = document.createElement("link");
+        link.rel = "prefetch";
+        link.as = "image";
+        link.href = optimizedImageUrl(imageUrl, 828);
+        link.imageSrcset = imageWidths
+          .map((width) => `${optimizedImageUrl(imageUrl, width)} ${width}w`)
+          .join(", ");
+        link.imageSizes = imageSizes;
+        link.fetchPriority = "low";
+        document.head.append(link);
+      }
+    };
+
+    const browserWindow = window as Window & {
+      requestIdleCallback?: (
+        callback: () => void,
+        options?: { timeout: number },
+      ) => number;
+    };
+
+    if (browserWindow.requestIdleCallback) {
+      browserWindow.requestIdleCallback(addPrefetchLinks, { timeout: 3_000 });
+      return;
+    }
+
+    const timeout = window.setTimeout(addPrefetchLinks, 1_500);
+    return () => window.clearTimeout(timeout);
+  }, [imageUrls]);
+
+  return null;
+}

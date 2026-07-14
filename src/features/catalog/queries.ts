@@ -45,6 +45,16 @@ export const getPublishedVehicleCards = cache(async (take?: number) =>
   }),
 );
 
+export const getPublishedVehicleImageUrls = cache(async () => {
+  const images = await prisma.vehicleImage.findMany({
+    where: { vehicle: { status: "PUBLISHED" } },
+    select: { url: true },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return Array.from(new Set(images.map((image) => image.url)));
+});
+
 export const getManufacturerIndex = cache(async () =>
   prisma.manufacturer.findMany({
     where: {

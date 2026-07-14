@@ -18,7 +18,7 @@ export function WireframeCar({ className = "" }: { className?: string }) {
         alt=""
         width={1600}
         height={700}
-        priority
+        preload
         className="h-auto w-full object-contain"
       />
     </motion.div>

@@ -120,7 +120,7 @@ export default async function VehicleDetailPage({ params }: Props) {
                 src={heroImage.url}
                 alt={heroImage.alt}
                 fill
-                priority
+                preload
                 sizes="(min-width: 1024px) 55vw, 100vw"
                 className="object-cover"
               />

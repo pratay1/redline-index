@@ -1,8 +1,10 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { DM_Mono, Manrope } from "next/font/google";
+import { CatalogImagePrefetch } from "@/components/catalog-image-prefetch";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { getPublishedVehicleImageUrls } from "@/features/catalog/queries";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -28,9 +30,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const imageUrls = await getPublishedVehicleImageUrls();
+
   return (
     <html
       lang="en"
@@ -38,6 +42,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <ClerkProvider>
+          <CatalogImagePrefetch imageUrls={imageUrls} />
           <a href="#main-content" className="skip-link">
             Skip to content
           </a>
