@@ -6,7 +6,13 @@ import { motion, useReducedMotion } from "motion/react";
 import type { VehicleCardData } from "@/features/catalog/queries";
 import { formatEngineDisplacement, humanize } from "@/lib/format";
 
-export function VehicleCard({ vehicle }: { vehicle: VehicleCardData }) {
+export function VehicleCard({
+  vehicle,
+  showTopSpeed = false,
+}: {
+  vehicle: VehicleCardData;
+  showTopSpeed?: boolean;
+}) {
   const { modelYear, engine, performance } = vehicle;
   const manufacturer = modelYear.generation.model.manufacturer;
   const image = vehicle.images[0];
@@ -65,12 +71,21 @@ export function VehicleCard({ vehicle }: { vehicle: VehicleCardData }) {
             </strong>
             0–60 SEC
           </span>
-          <span>
-            <strong className="block text-sm font-medium tracking-normal text-white">
-              {formatEngineDisplacement(engine.displacementCc)}
-            </strong>
-            {humanize(vehicle.drivetrain)}
-          </span>
+          {showTopSpeed ? (
+            <span>
+              <strong className="block text-sm font-medium tracking-normal text-white">
+                {performance?.topSpeedMph ?? "—"}
+              </strong>
+              MPH TOP SPEED
+            </span>
+          ) : (
+            <span>
+              <strong className="block text-sm font-medium tracking-normal text-white">
+                {formatEngineDisplacement(engine.displacementCc)}
+              </strong>
+              {humanize(vehicle.drivetrain)}
+            </span>
+          )}
         </div>
       </div>
     </motion.article>

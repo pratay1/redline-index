@@ -45,6 +45,41 @@ export const getPublishedVehicleCards = cache(async (take?: number) =>
   }),
 );
 
+export const getFastestVehiclePerModel = cache(async () => {
+  const vehicles = await prisma.vehicle.findMany({
+    where: { status: "PUBLISHED" },
+    include: vehicleCardInclude,
+  });
+  const fastestByModel = new Map<string, VehicleCardData>();
+
+  for (const vehicle of vehicles) {
+    const modelId = vehicle.modelYear.generation.model.id;
+    const current = fastestByModel.get(modelId);
+    const vehicleTopSpeed = vehicle.performance?.topSpeedMph ?? -1;
+    const currentTopSpeed = current?.performance?.topSpeedMph ?? -1;
+
+    if (
+      !current ||
+      vehicleTopSpeed > currentTopSpeed ||
+      (vehicleTopSpeed === currentTopSpeed &&
+        (vehicle.performance?.zeroToSixtySeconds ?? Infinity) <
+          (current.performance?.zeroToSixtySeconds ?? Infinity))
+    ) {
+      fastestByModel.set(modelId, vehicle);
+    }
+  }
+
+  return Array.from(fastestByModel.values()).sort((a, b) => {
+    const topSpeedDifference =
+      (b.performance?.topSpeedMph ?? -1) - (a.performance?.topSpeedMph ?? -1);
+
+    if (topSpeedDifference !== 0) return topSpeedDifference;
+    return a.modelYear.generation.model.name.localeCompare(
+      b.modelYear.generation.model.name,
+    );
+  });
+});
+
 export const getPublishedVehicleImageUrls = cache(async () => {
   const images = await prisma.vehicleImage.findMany({
     where: { vehicle: { status: "PUBLISHED" } },
