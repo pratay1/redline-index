@@ -26,6 +26,66 @@ const nextConfig: NextConfig = {
         hostname: "mediapool.bmwgroup.com",
         pathname: "/download/**",
       },
+      {
+        protocol: "https",
+        hostname: "media.mercedes-benz.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.mercedes-benz.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.mbusa.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "media.oneweb.mercedes-benz.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+        pathname: "/wikipedia/**",
+      },
+      {
+        protocol: "https",
+        hostname: "file.kelleybluebookimages.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "web.archive.org",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "mercedes-benz-media.co.uk",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "hips.hearstapps.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "s1.cdn.autoevolution.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.auto-data.net",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "c.encycarpedia.com",
+        pathname: "/ci/**",
+      },
     ],
   },
   turbopack: {

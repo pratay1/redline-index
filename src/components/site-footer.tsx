@@ -12,6 +12,34 @@ export function SiteFooter() {
             Verified vehicle records, built to last. Manufacturer specs with sources
             behind every number.
           </p>
+          <ul className="max-w-sm space-y-1.5 text-xs leading-5 text-white/40">
+            <li>
+              Vehicle photos are sourced from{" "}
+              <a
+                href="https://www.encycarpedia.com/us/makes/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-white/25 underline-offset-2 transition-colors hover:text-white/70 hover:decoration-white/50"
+              >
+                encyCARpedia
+              </a>
+              {", "}
+              with{" "}
+              <a
+                href="https://api.auto-data.net/image-database"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline decoration-white/25 underline-offset-2 transition-colors hover:text-white/70 hover:decoration-white/50"
+              >
+                auto-data.net
+              </a>{" "}
+              as fallback when a match isn’t available.
+            </li>
+            <li>
+              Images within the same model may look similar — trims often share a
+              generation gallery.
+            </li>
+          </ul>
         </div>
         <nav
           aria-label="Footer"

@@ -43,7 +43,7 @@ export default async function SearchPage({ searchParams }: Props) {
             <EmptyState
               eyebrow="Search ready"
               title="Start with a marque, a model, or a year."
-              description="Try BMW, 3 Series, G20, 2025, 330i, or M340i."
+              description="Try BMW, Mercedes-Benz, 3 Series, C-Class, G20, 2025, 330i, or C 300."
             />
           ) : vehicles.length ? (
             <>
