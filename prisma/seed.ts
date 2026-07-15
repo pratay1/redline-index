@@ -24,6 +24,7 @@ import { seedMercedesOther } from "./seed/mercedes-other";
 import { seedMercedesRoadstersCle } from "./seed/mercedes-roadsters-cle";
 import { seedMercedesSClass } from "./seed/mercedes-s-class";
 import { ensureMercedesManufacturer } from "./seed/mercedes-shared";
+import { selfHostVehicleImages } from "./catalog-images";
 
 const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
 
@@ -112,6 +113,11 @@ async function main() {
     if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
     if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
   }
+
+  const imageResult = await selfHostVehicleImages(prisma);
+  console.log(
+    `Self-hosted ${imageResult.localized}/${imageResult.total} vehicle images; downloaded ${imageResult.downloaded} new assets.`,
+  );
 }
 
 main()

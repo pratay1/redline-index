@@ -18,6 +18,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
     "prisma:seed": "prisma db seed",
+    "catalog:images": "tsx prisma/self-host-catalog-images.ts",
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
