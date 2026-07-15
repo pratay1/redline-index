@@ -84,7 +84,7 @@ export default function EtherealBeamsHero({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
           >
-            Horsepower, dimensions, MSRP, and fuel economy—tied to the market,
+            Horsepower, dimensions, MSRP, and fuel economy tied to the market,
             model year, and sources that back them up.
           </motion.p>
 
