@@ -24,5 +24,24 @@ export function isAllowedCatalogImageUrl(value: string) {
 }
 
 export function catalogImageUrl(sourceUrl: string) {
+  try {
+    const url = new URL(sourceUrl);
+    const encycarpediaImage = url.pathname.match(/^\/ci\/(\d+)\.jpg$/);
+
+    if (url.hostname === "c.encycarpedia.com" && encycarpediaImage) {
+      return `/catalog-images/${encycarpediaImage[1]}.jpg`;
+    }
+
+    if (
+      url.hostname === "www.auto-data.net" &&
+      url.pathname ===
+        "/images/f65/Mercedes-Benz-Vito-W447-facelift-2019-Extra-Long.jpg"
+    ) {
+      return "/catalog-images/mercedes-vito-w447-extra-long.jpg";
+    }
+  } catch {
+    // The proxy below returns a safe error response for malformed source URLs.
+  }
+
   return `/api/images?url=${encodeURIComponent(sourceUrl)}`;
 }
