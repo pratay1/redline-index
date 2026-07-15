@@ -4,7 +4,7 @@ import { Container } from "@/components/container";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-white/10 bg-[#080808]">
+    <footer data-site-footer className="mt-auto border-t border-white/10 bg-[#080808]/25">
       <Container className="flex flex-col gap-8 py-12 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-4">
           <BrandMark />

@@ -26,8 +26,8 @@ export default async function Home() {
         featuredLabel={featuredLabel}
       />
 
-      {/* Overlaps the hero fade so silk and content meet without a hard seam */}
-      <div className="relative z-[1] -mt-16 sm:-mt-24">
+      {/* Soft handoff into silk; content sits below the first screen */}
+      <div className="relative z-[1] mt-10 pt-6 sm:mt-16 sm:pt-10">
       <section className="border-b border-white/10">
         <Container className="py-10 sm:py-12">
           <dl>

@@ -12,5 +12,9 @@ const SilkBackground = dynamic(
 
 /** Client island so the root layout can stay a Server Component. */
 export function SiteSilkBackground() {
-  return <SilkBackground />;
+  return (
+    <div data-site-silk aria-hidden="true">
+      <SilkBackground />
+    </div>
+  );
 }

@@ -4,8 +4,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Container } from "@/components/container";
 import { EmptyState } from "@/components/empty-state";
 import { Reveal } from "@/components/motion/reveal";
-import { Stagger, StaggerItem } from "@/components/motion/stagger";
-import { VehicleCard } from "@/components/vehicle-card";
+import { VehicleCardGrid } from "@/components/vehicle-card-grid";
 import { getModelByManufacturerAndSlug } from "@/features/catalog/queries";
 import { parsePublicSlug } from "@/features/catalog/validation";
 
@@ -98,16 +97,11 @@ export default async function ModelPage({ params }: Props) {
                     <h3 className="font-mono text-[0.7rem] tracking-[0.14em] text-white uppercase">
                       Model year {modelYear.year}
                     </h3>
-                    <Stagger
+                    <VehicleCardGrid
+                      vehicles={modelYear.vehicles}
                       className="mt-4 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
                       delay={0.04}
-                    >
-                      {modelYear.vehicles.map((vehicle) => (
-                        <StaggerItem key={vehicle.id}>
-                          <VehicleCard vehicle={vehicle} />
-                        </StaggerItem>
-                      ))}
-                    </Stagger>
+                    />
                   </div>
                 ))}
               </section>

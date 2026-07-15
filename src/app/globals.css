@@ -64,6 +64,23 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body[data-racing-page="true"],
+body:has(main[data-racing]) {
+  background: #050403;
+}
+
+body[data-racing-page="true"] [data-site-silk],
+body:has(main[data-racing]) [data-site-silk] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body[data-racing-page="true"] [data-site-footer],
+#main-content:has(main[data-racing]) + [data-site-footer] {
+  display: none;
+}
+
 ::selection {
   background: var(--brand);
   color: white;

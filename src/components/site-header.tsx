@@ -6,17 +6,22 @@ import { Container } from "@/components/container";
 const navigation = [
   { href: "/browse", label: "Browse" },
   { href: "/manufacturers", label: "Manufacturers" },
+  { href: "/racing", label: "Racing" },
   { href: "/search", label: "Search" },
 ] as const;
 
 export async function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/[0.08] bg-[#080808]/95 backdrop-blur-md">
+    <header
+      data-site-header
+      className="sticky top-0 z-50 bg-gradient-to-b from-[#080808]/75 to-[#080808]/0"
+    >
       <Container className="grid min-h-[4.25rem] grid-cols-[1fr_auto] items-center gap-x-6 gap-y-3 py-3.5 md:grid-cols-[1fr_auto_1fr]">
         <BrandMark />
         <nav
+          data-primary-nav
           aria-label="Primary navigation"
-          className="hidden items-center gap-0.5 rounded-full border border-white/[0.09] bg-[#0e0e0e] p-1 md:flex md:justify-self-center"
+          className="hidden items-center gap-0.5 rounded-full border border-transparent bg-transparent p-1 md:flex md:justify-self-center"
         >
           {navigation.map((item) => (
             <Link
@@ -29,6 +34,7 @@ export async function SiteHeader() {
           ))}
         </nav>
         <nav
+          data-primary-nav
           aria-label="Primary navigation mobile"
           className="col-span-2 flex w-full items-center gap-5 md:hidden"
         >

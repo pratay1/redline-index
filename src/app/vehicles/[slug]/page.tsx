@@ -1,14 +1,13 @@
-import Image from "next/image";
 import type { Metadata, Route } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { CatalogVehicleImage } from "@/components/catalog-vehicle-image";
 import { Container } from "@/components/container";
 import { EmptyState } from "@/components/empty-state";
 import { Reveal } from "@/components/motion/reveal";
-import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { SpecificationGroup } from "@/components/specification-group";
-import { VehicleCard } from "@/components/vehicle-card";
+import { VehicleCardGrid } from "@/components/vehicle-card-grid";
 import { getVehicleBySlug } from "@/features/catalog/queries";
 import { parsePublicSlug } from "@/features/catalog/validation";
 import {
@@ -17,7 +16,6 @@ import {
   formatNumber,
   humanize,
 } from "@/lib/format";
-import { catalogImageUrl } from "@/lib/catalog-image";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -77,8 +75,8 @@ export default async function VehicleDetailPage({ params }: Props) {
             ]}
           />
         </Container>
-        <div className="border-line mx-auto grid max-w-7xl border-x lg:grid-cols-[minmax(0,0.9fr)_minmax(25rem,1.1fr)]">
-          <Reveal className="flex flex-col justify-end px-5 py-10 sm:px-8 sm:py-14 lg:px-10 lg:py-20">
+        <div className="border-line mx-auto grid max-w-7xl border-x lg:mx-0 lg:max-w-none lg:grid-cols-[minmax(0,0.9fr)_minmax(25rem,1.1fr)] lg:border-x-0 lg:pl-[50px] lg:pr-[50px]">
+          <Reveal className="flex flex-col justify-end px-5 py-10 sm:px-8 sm:py-14 lg:px-0 lg:pr-10 lg:py-20">
             <p className="text-signal font-mono text-[0.66rem] tracking-[0.16em] uppercase">
               {vehicle.market} market · {humanize(vehicle.bodyStyle)}
             </p>
@@ -115,16 +113,13 @@ export default async function VehicleDetailPage({ params }: Props) {
               </div>
             </div>
           </Reveal>
-          <div className="border-line relative min-h-[22rem] border-t lg:min-h-[38rem] lg:border-t-0 lg:border-l">
+          <div className="border-line relative min-h-[22rem] overflow-hidden border-t bg-[#080808] lg:min-h-[38rem] lg:border-t-0 lg:border-l">
             {heroImage ? (
-              <Image
-                src={catalogImageUrl(heroImage.url)}
+              <CatalogVehicleImage
+                url={heroImage.url}
                 alt={heroImage.alt}
-                fill
-                unoptimized
+                sizes="(min-width: 1024px) 65vw, 100vw"
                 preload
-                sizes="(min-width: 1024px) 55vw, 100vw"
-                className="object-cover"
               />
             ) : (
               <div className="bg-surface-raised grid h-full place-items-center">
@@ -134,7 +129,7 @@ export default async function VehicleDetailPage({ params }: Props) {
               </div>
             )}
             {heroImage ? (
-              <div className="absolute inset-x-0 bottom-0 bg-[#080808] px-5 pt-14 pb-5 font-mono text-[0.58rem] tracking-[0.12em] text-white/70 uppercase">
+              <div className="absolute inset-x-0 bottom-0 z-[2] bg-[#080808]/90 px-5 pt-14 pb-5 font-mono text-[0.58rem] tracking-[0.12em] text-white/70 uppercase">
                 {heroImage.credit ?? "Image credit unavailable"}
               </div>
             ) : null}
@@ -330,16 +325,11 @@ export default async function VehicleDetailPage({ params }: Props) {
             </Link>
           </div>
           {relatedTrims.length ? (
-            <Stagger
+            <VehicleCardGrid
+              vehicles={relatedTrims}
               className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
               delay={0.05}
-            >
-              {relatedTrims.map((relatedTrim) => (
-                <StaggerItem key={relatedTrim.id}>
-                  <VehicleCard vehicle={relatedTrim} />
-                </StaggerItem>
-              ))}
-            </Stagger>
+            />
           ) : (
             <div className="mt-8">
               <EmptyState

@@ -6,7 +6,7 @@ import { Container } from "@/components/container";
 import { EmptyState } from "@/components/empty-state";
 import { Reveal } from "@/components/motion/reveal";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
-import { VehicleCard } from "@/components/vehicle-card";
+import { VehicleCardGrid } from "@/components/vehicle-card-grid";
 import { getManufacturerBySlug } from "@/features/catalog/queries";
 import { parsePublicSlug } from "@/features/catalog/validation";
 
@@ -132,16 +132,11 @@ export default async function ManufacturerPage({ params }: Props) {
             <p className="font-mono text-[0.65rem] tracking-[0.14em] text-signal uppercase">
               Featured records
             </p>
-            <Stagger
+            <VehicleCardGrid
+              vehicles={featuredVehicles}
               className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
               delay={0.05}
-            >
-              {featuredVehicles.map((vehicle) => (
-                <StaggerItem key={vehicle.id}>
-                  <VehicleCard vehicle={vehicle} />
-                </StaggerItem>
-              ))}
-            </Stagger>
+            />
           </section>
         ) : null}
       </Container>

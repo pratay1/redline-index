@@ -50,30 +50,33 @@ export const getFastestVehiclePerModel = cache(async () => {
     where: { status: "PUBLISHED" },
     include: vehicleCardInclude,
   });
-  const fastestByModel = new Map<string, VehicleCardData>();
+  const quickestByModel = new Map<string, VehicleCardData>();
 
   for (const vehicle of vehicles) {
     const modelId = vehicle.modelYear.generation.model.id;
-    const current = fastestByModel.get(modelId);
-    const vehicleTopSpeed = vehicle.performance?.topSpeedMph ?? -1;
-    const currentTopSpeed = current?.performance?.topSpeedMph ?? -1;
+    const current = quickestByModel.get(modelId);
+    const vehicleZeroToSixty =
+      vehicle.performance?.zeroToSixtySeconds ?? Infinity;
+    const currentZeroToSixty =
+      current?.performance?.zeroToSixtySeconds ?? Infinity;
 
     if (
       !current ||
-      vehicleTopSpeed > currentTopSpeed ||
-      (vehicleTopSpeed === currentTopSpeed &&
-        (vehicle.performance?.zeroToSixtySeconds ?? Infinity) <
-          (current.performance?.zeroToSixtySeconds ?? Infinity))
+      vehicleZeroToSixty < currentZeroToSixty ||
+      (vehicleZeroToSixty === currentZeroToSixty &&
+        (vehicle.performance?.topSpeedMph ?? -1) >
+          (current.performance?.topSpeedMph ?? -1))
     ) {
-      fastestByModel.set(modelId, vehicle);
+      quickestByModel.set(modelId, vehicle);
     }
   }
 
-  return Array.from(fastestByModel.values()).sort((a, b) => {
-    const topSpeedDifference =
-      (b.performance?.topSpeedMph ?? -1) - (a.performance?.topSpeedMph ?? -1);
+  return Array.from(quickestByModel.values()).sort((a, b) => {
+    const zeroToSixtyDifference =
+      (a.performance?.zeroToSixtySeconds ?? Infinity) -
+      (b.performance?.zeroToSixtySeconds ?? Infinity);
 
-    if (topSpeedDifference !== 0) return topSpeedDifference;
+    if (zeroToSixtyDifference !== 0) return zeroToSixtyDifference;
     return a.modelYear.generation.model.name.localeCompare(
       b.modelYear.generation.model.name,
     );

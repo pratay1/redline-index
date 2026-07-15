@@ -73,15 +73,26 @@ export async function selfHostVehicleImages(prisma: PrismaClient) {
   await mkdir(catalogDirectory, { recursive: true });
 
   let downloaded = 0;
+  const failed = new Set<string>();
   for (let index = 0; index < externalSources.length; index += 4) {
     const batch = externalSources.slice(index, index + 4);
     const results = await Promise.all(
       batch.map(async (sourceUrl) => {
         if (!URL.canParse(sourceUrl)) {
-          throw new Error(`Vehicle image must be a valid URL or local catalog path: ${sourceUrl}`);
+          console.warn(`[catalog-images] skip invalid URL: ${sourceUrl}`);
+          failed.add(sourceUrl);
+          return false;
         }
 
-        return downloadImage(sourceUrl, catalogPathForSourceUrl(sourceUrl));
+        try {
+          return await downloadImage(sourceUrl, catalogPathForSourceUrl(sourceUrl));
+        } catch (error) {
+          console.warn(
+            `[catalog-images] skip download: ${sourceUrl} (${error instanceof Error ? error.message : error})`,
+          );
+          failed.add(sourceUrl);
+          return false;
+        }
       }),
     );
     downloaded += results.filter(Boolean).length;
@@ -89,12 +100,19 @@ export async function selfHostVehicleImages(prisma: PrismaClient) {
 
   let localized = 0;
   for (const sourceUrl of externalSources) {
+    if (failed.has(sourceUrl)) continue;
+    const localPath = catalogPathForSourceUrl(sourceUrl);
+    const destination = path.join(catalogDirectory, path.basename(localPath));
+    if (!(await fileExists(destination))) {
+      failed.add(sourceUrl);
+      continue;
+    }
     const result = await prisma.vehicleImage.updateMany({
       where: { url: sourceUrl },
-      data: { url: catalogPathForSourceUrl(sourceUrl) },
+      data: { url: localPath },
     });
     localized += result.count;
   }
 
-  return { downloaded, localized, total: images.length };
+  return { downloaded, localized, failed: failed.size, total: images.length };
 }

@@ -26,15 +26,16 @@ export default function EtherealBeamsHero({
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="relative isolate min-h-[min(100dvh,56rem)] w-full overflow-visible">
-      {/* Solid black only in the upper field so the beams read; bottom stays open to silk */}
+    <section className="relative isolate -mt-[4.25rem] min-h-dvh w-full overflow-visible">
+      {/* Solid black through most of the first screen so the bars read */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[72%] bg-[#000000]"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[calc(100dvh-3rem)] bg-[#000000]"
         aria-hidden="true"
       />
 
+      {/* Beams fill the first screen; shine is cut as they leave the hero */}
       <div
-        className="absolute inset-0 z-0 [mask-image:linear-gradient(to_bottom,black_0%,black_42%,rgba(0,0,0,0.55)_68%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_42%,rgba(0,0,0,0.55)_68%,transparent_100%)]"
+        className="absolute inset-x-0 top-0 z-0 h-[calc(100dvh+20rem)] opacity-80 [mask-image:linear-gradient(to_bottom,black_0%,black_calc(100%-22rem),rgba(0,0,0,0.35)_calc(100%-16rem),rgba(0,0,0,0.08)_calc(100%-9rem),transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_calc(100%-22rem),rgba(0,0,0,0.35)_calc(100%-16rem),rgba(0,0,0,0.08)_calc(100%-9rem),transparent_100%)]"
         aria-hidden="true"
       >
         {reduceMotion ? (
@@ -44,28 +45,28 @@ export default function EtherealBeamsHero({
             beamWidth={2.5}
             beamHeight={18}
             beamNumber={15}
-            lightColor="#ffffff"
+            lightColor="#c8c8c8"
             speed={2.5}
-            noiseIntensity={2}
+            noiseIntensity={1.7}
             scale={0.15}
             rotation={43}
           />
         )}
       </div>
 
-      {/* Readability veil — strong at top, fully clear by the handoff */}
+      {/* Readability veil — softens shine without killing the glow */}
       <div
-        className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.35)_38%,rgba(0,0,0,0.12)_62%,rgba(0,0,0,0)_86%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-[calc(100dvh-4rem)] bg-[linear-gradient(180deg,rgba(0,0,0,0.62)_0%,rgba(0,0,0,0.34)_45%,rgba(0,0,0,0.12)_80%,rgba(0,0,0,0)_100%)]"
         aria-hidden="true"
       />
 
-      {/* Long soft bridge into the silk field below */}
+      {/* Matte the fade zone so beams don't keep shining under the hero */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[min(42vh,22rem)] translate-y-[55%] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(3,3,3,0.55)_28%,rgba(3,3,3,0.28)_58%,rgba(3,3,3,0)_100%)]"
+        className="pointer-events-none absolute inset-x-0 top-[78dvh] z-[2] h-[calc(22dvh+20rem)] bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.55)_22%,rgba(0,0,0,0.92)_48%,rgba(3,3,3,0.75)_72%,rgba(3,3,3,0)_100%)]"
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[min(100dvh,56rem)] max-w-7xl flex-col justify-center px-5 pt-24 pb-32 sm:px-8 sm:pt-24 sm:pb-40 lg:px-10">
+      <div className="relative z-10 mx-auto flex min-h-dvh max-w-7xl flex-col justify-center px-5 pt-36 pb-24 sm:px-8 sm:pt-44 sm:pb-28 lg:px-10">
         <div className="mx-auto max-w-2xl text-center">
           <motion.h1
             className="mb-6 text-[clamp(2.5rem,7vw,4.5rem)] leading-[0.95] font-semibold tracking-[-0.04em] text-white"

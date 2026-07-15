@@ -2,6 +2,12 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import type { SeedCtx } from "./seed/bmw-shared";
+import { seedAudiALine } from "./seed/audi-a-line";
+import { seedAudiEtron } from "./seed/audi-etron";
+import { seedAudiQLine } from "./seed/audi-q-line";
+import { seedAudiRsSport } from "./seed/audi-rs-sport";
+import { ensureAudiManufacturer } from "./seed/audi-shared";
+import { seedAudiSLine } from "./seed/audi-s-line";
 import { seedBmw2Series } from "./seed/bmw-2-series";
 import { seedBmw3Series } from "./seed/bmw-3-series";
 import { seedBmw4Series } from "./seed/bmw-4-series";
@@ -24,6 +30,18 @@ import { seedMercedesOther } from "./seed/mercedes-other";
 import { seedMercedesRoadstersCle } from "./seed/mercedes-roadsters-cle";
 import { seedMercedesSClass } from "./seed/mercedes-s-class";
 import { ensureMercedesManufacturer } from "./seed/mercedes-shared";
+import { seedPorsche718 } from "./seed/porsche-718";
+import { seedPorsche911 } from "./seed/porsche-911";
+import { seedPorsche918 } from "./seed/porsche-918";
+import { seedPorscheSuv } from "./seed/porsche-suv";
+import { ensurePorscheManufacturer } from "./seed/porsche-shared";
+import { seedPorscheSedanEv } from "./seed/porsche-sedan-ev";
+import { seedToyotaSedans } from "./seed/toyota-sedans";
+import { ensureToyotaManufacturer } from "./seed/toyota-shared";
+import { seedToyotaSports } from "./seed/toyota-sports";
+import { seedToyotaSuvCompact } from "./seed/toyota-suv-compact";
+import { seedToyotaSuvLarge } from "./seed/toyota-suv-large";
+import { seedToyotaTrucksVans } from "./seed/toyota-trucks-vans";
 import { selfHostVehicleImages } from "./catalog-images";
 
 const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
@@ -53,6 +71,9 @@ async function main() {
   });
 
   const mercedes = await ensureMercedesManufacturer(prisma);
+  const audi = await ensureAudiManufacturer(prisma);
+  const porsche = await ensurePorscheManufacturer(prisma);
+  const toyota = await ensureToyotaManufacturer(prisma);
 
   const bmwCtx: SeedCtx = {
     prisma,
@@ -65,6 +86,27 @@ async function main() {
     prisma,
     importerId: importer.id,
     manufacturerId: mercedes.id,
+    pricingDate: PRICING_DATE,
+  };
+
+  const audiCtx: SeedCtx = {
+    prisma,
+    importerId: importer.id,
+    manufacturerId: audi.id,
+    pricingDate: PRICING_DATE,
+  };
+
+  const porscheCtx: SeedCtx = {
+    prisma,
+    importerId: importer.id,
+    manufacturerId: porsche.id,
+    pricingDate: PRICING_DATE,
+  };
+
+  const toyotaCtx: SeedCtx = {
+    prisma,
+    importerId: importer.id,
+    manufacturerId: toyota.id,
     pricingDate: PRICING_DATE,
   };
 
@@ -109,6 +151,57 @@ async function main() {
     const result = await run();
     console.log(
       `Mercedes ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
+    );
+    if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
+    if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
+  }
+
+  const audiJobs: Array<[string, () => Promise<{ seeded: string[]; skipped: string[] }>]> = [
+    ["A-line", () => seedAudiALine(audiCtx)],
+    ["Q-line", () => seedAudiQLine(audiCtx)],
+    ["e-tron", () => seedAudiEtron(audiCtx)],
+    ["S/SQ", () => seedAudiSLine(audiCtx)],
+    ["RS/sport", () => seedAudiRsSport(audiCtx)],
+  ];
+
+  for (const [name, run] of audiJobs) {
+    const result = await run();
+    console.log(
+      `Audi ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
+    );
+    if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
+    if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
+  }
+
+  const porscheJobs: Array<[string, () => Promise<{ seeded: string[]; skipped: string[] }>]> = [
+    ["718", () => seedPorsche718(porscheCtx)],
+    ["911", () => seedPorsche911(porscheCtx)],
+    ["Cayenne/Macan", () => seedPorscheSuv(porscheCtx)],
+    ["Panamera/Taycan", () => seedPorscheSedanEv(porscheCtx)],
+    ["918", () => seedPorsche918(porscheCtx)],
+  ];
+
+  for (const [name, run] of porscheJobs) {
+    const result = await run();
+    console.log(
+      `Porsche ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
+    );
+    if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
+    if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
+  }
+
+  const toyotaJobs: Array<[string, () => Promise<{ seeded: string[]; skipped: string[] }>]> = [
+    ["Sedans/hatch", () => seedToyotaSedans(toyotaCtx)],
+    ["Sports", () => seedToyotaSports(toyotaCtx)],
+    ["SUV compact", () => seedToyotaSuvCompact(toyotaCtx)],
+    ["SUV large", () => seedToyotaSuvLarge(toyotaCtx)],
+    ["Trucks/vans", () => seedToyotaTrucksVans(toyotaCtx)],
+  ];
+
+  for (const [name, run] of toyotaJobs) {
+    const result = await run();
+    console.log(
+      `Toyota ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
     );
     if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
     if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);

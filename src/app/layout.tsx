@@ -56,7 +56,7 @@ export default async function RootLayout({
           </a>
           <div className="relative z-10 flex min-h-full flex-1 flex-col">
             <SiteHeader />
-            <div id="main-content" className="flex-1">
+            <div id="main-content" className="relative z-[2] flex-1">
               {children}
             </div>
             <SiteFooter />

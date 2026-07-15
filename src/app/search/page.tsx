@@ -3,10 +3,9 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Container } from "@/components/container";
 import { EmptyState } from "@/components/empty-state";
 import { Reveal } from "@/components/motion/reveal";
-import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { PageHeader } from "@/components/page-header";
 import { SearchForm } from "@/components/search-form";
-import { VehicleCard } from "@/components/vehicle-card";
+import { VehicleCardGrid } from "@/components/vehicle-card-grid";
 import { searchPublishedVehicles } from "@/features/catalog/queries";
 import { parseSearchTerm } from "@/features/catalog/validation";
 
@@ -51,16 +50,11 @@ export default async function SearchPage({ searchParams }: Props) {
                 {vehicles.length} result{vehicles.length === 1 ? "" : "s"} for{" "}
                 <span className="text-white">“{query}”</span>
               </p>
-              <Stagger
+              <VehicleCardGrid
+                vehicles={vehicles}
                 className="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
                 delay={0.04}
-              >
-                {vehicles.map((vehicle) => (
-                  <StaggerItem key={vehicle.id}>
-                    <VehicleCard vehicle={vehicle} />
-                  </StaggerItem>
-                ))}
-              </Stagger>
+              />
             </>
           ) : (
             <EmptyState
