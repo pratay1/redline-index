@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { catalogImageUrl } from "@/lib/catalog-image";
 
 const prefetchedImageUrls = new Set<string>();
 
@@ -47,7 +48,7 @@ export function CatalogImagePrefetch({ imageUrls }: { imageUrls: string[] }) {
         const link = document.createElement("link");
         link.rel = "prefetch";
         link.as = "image";
-        link.href = imageUrl;
+        link.href = catalogImageUrl(imageUrl);
         link.fetchPriority = "low";
         document.head.append(link);
       }

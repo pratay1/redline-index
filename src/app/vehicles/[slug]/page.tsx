@@ -17,6 +17,7 @@ import {
   formatNumber,
   humanize,
 } from "@/lib/format";
+import { catalogImageUrl } from "@/lib/catalog-image";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -117,7 +118,7 @@ export default async function VehicleDetailPage({ params }: Props) {
           <div className="border-line relative min-h-[22rem] border-t lg:min-h-[38rem] lg:border-t-0 lg:border-l">
             {heroImage ? (
               <Image
-                src={heroImage.url}
+                src={catalogImageUrl(heroImage.url)}
                 alt={heroImage.alt}
                 fill
                 unoptimized

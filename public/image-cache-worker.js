@@ -1,6 +1,6 @@
 "use strict";
 
-const IMAGE_CACHE = "redline-optimized-images-v1";
+const IMAGE_CACHE = "redline-catalog-images-v2";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(self.skipWaiting());
@@ -16,7 +16,7 @@ self.addEventListener("fetch", (event) => {
   if (
     event.request.method !== "GET" ||
     requestUrl.origin !== self.location.origin ||
-    requestUrl.pathname !== "/_next/image"
+    (requestUrl.pathname !== "/_next/image" && requestUrl.pathname !== "/api/images")
   ) {
     return;
   }

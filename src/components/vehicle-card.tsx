@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
 import type { VehicleCardData } from "@/features/catalog/queries";
+import { catalogImageUrl } from "@/lib/catalog-image";
 import { formatEngineDisplacement, humanize } from "@/lib/format";
 
 export function VehicleCard({
@@ -32,7 +33,7 @@ export function VehicleCard({
       <div className="relative aspect-[16/10] overflow-hidden border-b border-white/10 bg-black">
         {image ? (
           <Image
-            src={image.url}
+            src={catalogImageUrl(image.url)}
             alt={image.alt}
             fill
             unoptimized
