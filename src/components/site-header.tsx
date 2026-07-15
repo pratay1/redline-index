@@ -1,4 +1,4 @@
-import { Show, SignInButton, SignOutButton } from "@clerk/nextjs";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
 import { Container } from "@/components/container";
@@ -51,11 +51,7 @@ export async function SiteHeader() {
             </SignInButton>
           </Show>
           <Show when="signed-in">
-            <SignOutButton>
-              <button className="inline-flex min-h-10 items-center rounded-full border border-white/15 px-5 py-2 font-mono text-[0.62rem] tracking-[0.16em] text-white uppercase transition-colors hover:border-white/35 hover:bg-white/[0.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
-                Sign out
-              </button>
-            </SignOutButton>
+            <UserButton />
           </Show>
         </div>
       </Container>
