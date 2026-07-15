@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 
-const imageWidths = [640, 750, 828, 1080, 1200, 1920] as const;
-const imageSizes = "(min-width: 1024px) 55vw, (min-width: 640px) 50vw, 100vw";
 const prefetchedImageUrls = new Set<string>();
 
 type NetworkInformation = {
@@ -22,10 +20,6 @@ function shouldPrefetchImages() {
   );
 }
 
-function optimizedImageUrl(url: string, width: number) {
-  return `/_next/image?url=${encodeURIComponent(url)}&w=${width}&q=75`;
-}
-
 async function enablePersistentImageCache() {
   if (!("serviceWorker" in navigator)) return;
 
@@ -38,8 +32,8 @@ async function enablePersistentImageCache() {
 }
 
 /**
- * Warms the browser cache with the same optimized, responsive assets rendered by
- * next/image. Work starts only after initial rendering is idle and remains low priority.
+ * Warms the browser cache with the publisher-hosted assets rendered by the catalogue.
+ * Work starts only after initial rendering is idle and remains low priority.
  */
 export function CatalogImagePrefetch({ imageUrls }: { imageUrls: string[] }) {
   useEffect(() => {
@@ -53,11 +47,7 @@ export function CatalogImagePrefetch({ imageUrls }: { imageUrls: string[] }) {
         const link = document.createElement("link");
         link.rel = "prefetch";
         link.as = "image";
-        link.href = optimizedImageUrl(imageUrl, 828);
-        link.imageSrcset = imageWidths
-          .map((width) => `${optimizedImageUrl(imageUrl, width)} ${width}w`)
-          .join(", ");
-        link.imageSizes = imageSizes;
+        link.href = imageUrl;
         link.fetchPriority = "low";
         document.head.append(link);
       }

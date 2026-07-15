@@ -58,7 +58,7 @@ export default async function VehicleDetailPage({ params }: Props) {
 
   return (
     <main>
-      <section className="border-b border-line">
+      <section className="border-line border-b">
         <Container className="py-8">
           <Breadcrumbs
             items={[
@@ -76,23 +76,23 @@ export default async function VehicleDetailPage({ params }: Props) {
             ]}
           />
         </Container>
-        <div className="mx-auto grid max-w-7xl border-x border-line lg:grid-cols-[minmax(0,0.9fr)_minmax(25rem,1.1fr)]">
+        <div className="border-line mx-auto grid max-w-7xl border-x lg:grid-cols-[minmax(0,0.9fr)_minmax(25rem,1.1fr)]">
           <Reveal className="flex flex-col justify-end px-5 py-10 sm:px-8 sm:py-14 lg:px-10 lg:py-20">
-            <p className="font-mono text-[0.66rem] tracking-[0.16em] text-signal uppercase">
+            <p className="text-signal font-mono text-[0.66rem] tracking-[0.16em] uppercase">
               {vehicle.market} market · {humanize(vehicle.bodyStyle)}
             </p>
-            <p className="mt-6 font-mono text-xs tracking-[0.12em] text-muted uppercase">
+            <p className="text-muted mt-6 font-mono text-xs tracking-[0.12em] uppercase">
               {manufacturer.name} / {model.name} / {generation.code} / {modelYear.year}
             </p>
             <h1 className="mt-3 text-[clamp(3.25rem,8vw,6.5rem)] leading-[0.9] font-semibold tracking-[-0.035em] text-white">
               {vehicle.name}
             </h1>
-            <div className="mt-10 grid grid-cols-3 gap-4 border-t border-line pt-6">
+            <div className="border-line mt-10 grid grid-cols-3 gap-4 border-t pt-6">
               <div>
                 <p className="text-2xl font-semibold tracking-[-0.03em] text-white sm:text-3xl">
                   {performance?.powerHp ?? "—"}
                 </p>
-                <p className="mt-1 font-mono text-[0.58rem] tracking-[0.13em] text-muted uppercase">
+                <p className="text-muted mt-1 font-mono text-[0.58rem] tracking-[0.13em] uppercase">
                   Horsepower
                 </p>
               </div>
@@ -100,7 +100,7 @@ export default async function VehicleDetailPage({ params }: Props) {
                 <p className="text-2xl font-semibold tracking-[-0.03em] text-white sm:text-3xl">
                   {performance?.zeroToSixtySeconds ?? "—"}
                 </p>
-                <p className="mt-1 font-mono text-[0.58rem] tracking-[0.13em] text-muted uppercase">
+                <p className="text-muted mt-1 font-mono text-[0.58rem] tracking-[0.13em] uppercase">
                   0–60 sec
                 </p>
               </div>
@@ -108,24 +108,25 @@ export default async function VehicleDetailPage({ params }: Props) {
                 <p className="text-2xl font-semibold tracking-[-0.03em] text-white sm:text-3xl">
                   {formatEngineDisplacement(engine.displacementCc)}
                 </p>
-                <p className="mt-1 font-mono text-[0.58rem] tracking-[0.13em] text-muted uppercase">
+                <p className="text-muted mt-1 font-mono text-[0.58rem] tracking-[0.13em] uppercase">
                   Displacement
                 </p>
               </div>
             </div>
           </Reveal>
-          <div className="relative min-h-[22rem] border-t border-line lg:min-h-[38rem] lg:border-t-0 lg:border-l">
+          <div className="border-line relative min-h-[22rem] border-t lg:min-h-[38rem] lg:border-t-0 lg:border-l">
             {heroImage ? (
               <Image
                 src={heroImage.url}
                 alt={heroImage.alt}
                 fill
+                unoptimized
                 preload
                 sizes="(min-width: 1024px) 55vw, 100vw"
                 className="object-cover"
               />
             ) : (
-              <div className="grid h-full place-items-center bg-surface-raised">
+              <div className="bg-surface-raised grid h-full place-items-center">
                 <span className="font-mono text-[0.65rem] tracking-[0.14em] text-white/35 uppercase">
                   No official image available
                 </span>
@@ -254,8 +255,8 @@ export default async function VehicleDetailPage({ params }: Props) {
           />
         </div>
 
-        <aside className="h-fit border-t border-line pt-6 lg:sticky lg:top-24">
-          <h2 className="font-mono text-[0.65rem] tracking-[0.14em] text-signal uppercase">
+        <aside className="border-line h-fit border-t pt-6 lg:sticky lg:top-24">
+          <h2 className="text-signal font-mono text-[0.65rem] tracking-[0.14em] uppercase">
             Record context
           </h2>
           <dl className="mt-5 space-y-4 text-sm">
@@ -278,8 +279,8 @@ export default async function VehicleDetailPage({ params }: Props) {
               <dd className="text-right text-white">{modelYear.year}</dd>
             </div>
           </dl>
-          <section className="mt-10 border-t border-line pt-6">
-            <h2 className="font-mono text-[0.65rem] tracking-[0.14em] text-signal uppercase">
+          <section className="border-line mt-10 border-t pt-6">
+            <h2 className="text-signal font-mono text-[0.65rem] tracking-[0.14em] uppercase">
               Sources
             </h2>
             {sources.length ? (
@@ -290,18 +291,18 @@ export default async function VehicleDetailPage({ params }: Props) {
                       href={source.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="block text-sm font-medium text-white transition-colors hover:text-signal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
+                      className="hover:text-signal focus-visible:outline-signal block text-sm font-medium text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
                     >
                       {source.title}
                     </a>
-                    <p className="mt-1 font-mono text-[0.58rem] tracking-[0.1em] text-muted uppercase">
+                    <p className="text-muted mt-1 font-mono text-[0.58rem] tracking-[0.1em] uppercase">
                       {source.publisher} · {humanize(source.type)}
                     </p>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-4 text-sm text-muted">
+              <p className="text-muted mt-4 text-sm">
                 No sources are attached to this record yet.
               </p>
             )}
@@ -309,7 +310,7 @@ export default async function VehicleDetailPage({ params }: Props) {
         </aside>
       </Container>
 
-      <section className="border-t border-line">
+      <section className="border-line border-t">
         <Container className="py-14 sm:py-16">
           <div className="flex items-end justify-between gap-4">
             <div>
@@ -322,7 +323,7 @@ export default async function VehicleDetailPage({ params }: Props) {
             </div>
             <Link
               href={`/manufacturers/${manufacturer.slug}/${model.slug}`}
-              className="font-mono text-[0.64rem] tracking-[0.13em] text-muted uppercase transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              className="text-muted font-mono text-[0.64rem] tracking-[0.13em] uppercase transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               Model record →
             </Link>
