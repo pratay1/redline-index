@@ -4,7 +4,6 @@ import { Container } from "@/components/container";
 import { HomeHero } from "@/components/home-hero";
 import { Stagger, StaggerItem } from "@/components/motion/stagger";
 import { SectionHeading } from "@/components/section-heading";
-import { VehicleCard } from "@/components/vehicle-card";
 import { getHomepageData } from "@/features/catalog/queries";
 
 export const dynamic = "force-dynamic";
@@ -101,33 +100,6 @@ export default async function Home() {
                     {manufacturer._count.models === 1 ? "" : "s"} →
                   </span>
                 </Link>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </Container>
-      </section>
-
-      <section className="border-t border-white/10">
-        <Container className="py-20 sm:py-24">
-          <SectionHeading
-            eyebrow="In the catalogue"
-            title="Recent trims"
-            action={
-              <Link
-                href="/browse"
-                className="font-mono text-[0.65rem] tracking-[0.13em] text-white/45 uppercase transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-              >
-                Browse all →
-              </Link>
-            }
-          />
-          <Stagger
-            className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
-            delay={0.08}
-          >
-            {vehicles.map((vehicle) => (
-              <StaggerItem key={vehicle.id}>
-                <VehicleCard vehicle={vehicle} />
               </StaggerItem>
             ))}
           </Stagger>
