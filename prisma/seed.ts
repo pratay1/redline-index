@@ -36,6 +36,8 @@ import { seedPorsche918 } from "./seed/porsche-918";
 import { seedPorscheSuv } from "./seed/porsche-suv";
 import { ensurePorscheManufacturer } from "./seed/porsche-shared";
 import { seedPorscheSedanEv } from "./seed/porsche-sedan-ev";
+import { seedTeslaCurrentLineup } from "./seed/tesla-current-lineup";
+import { ensureTeslaManufacturer } from "./seed/tesla-shared";
 import { seedToyotaSedans } from "./seed/toyota-sedans";
 import { ensureToyotaManufacturer } from "./seed/toyota-shared";
 import { seedToyotaSports } from "./seed/toyota-sports";
@@ -74,6 +76,7 @@ async function main() {
   const audi = await ensureAudiManufacturer(prisma);
   const porsche = await ensurePorscheManufacturer(prisma);
   const toyota = await ensureToyotaManufacturer(prisma);
+  const tesla = await ensureTeslaManufacturer(prisma);
 
   const bmwCtx: SeedCtx = {
     prisma,
@@ -107,6 +110,13 @@ async function main() {
     prisma,
     importerId: importer.id,
     manufacturerId: toyota.id,
+    pricingDate: PRICING_DATE,
+  };
+
+  const teslaCtx: SeedCtx = {
+    prisma,
+    importerId: importer.id,
+    manufacturerId: tesla.id,
     pricingDate: PRICING_DATE,
   };
 
@@ -202,6 +212,19 @@ async function main() {
     const result = await run();
     console.log(
       `Toyota ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
+    );
+    if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
+    if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
+  }
+
+  const teslaJobs: Array<[string, () => Promise<{ seeded: string[]; skipped: string[] }>]> = [
+    ["Current lineup", () => seedTeslaCurrentLineup(teslaCtx)],
+  ];
+
+  for (const [name, run] of teslaJobs) {
+    const result = await run();
+    console.log(
+      `Tesla ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
     );
     if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
     if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
