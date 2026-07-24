@@ -1,31 +1,116 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0b0c0d;
-  --foreground: #f5f2eb;
-  --muted: #9c9a94;
-  --line: #2a2c2e;
-  --signal: #ef3d2f;
+  --background: #030303;
+  --surface: #0e0e0e;
+  --surface-raised: #161616;
+  --foreground: #ffffff;
+  --muted: #a3a3a3;
+  --line: rgba(255, 255, 255, 0.12);
+  --signal: #ffffff;
+  --signal-hover: #e5e5e5;
+  --brand: #ef3d2f;
+  --brand-hover: #ff5a4a;
+  --glass: #121212;
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-signal: var(--signal);
+  --color-signal-hover: var(--signal-hover);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-dm-mono);
+  --font-display: var(--font-syne);
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-manrope), sans-serif;
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+}
+
+body[data-racing-page="true"],
+body:has(main[data-racing]) {
+  background: #050403;
+}
+
+body[data-racing-page="true"] [data-site-silk],
+body:has(main[data-racing]) [data-site-silk] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body[data-racing-page="true"] [data-site-footer],
+#main-content:has(main[data-racing]) + [data-site-footer] {
+  display: none;
 }
 
 ::selection {
-  background: var(--signal);
+  background: var(--brand);
   color: white;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 100;
+  background: var(--brand);
+  color: white;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  transition: top 180ms var(--ease-out-expo);
+}
+
+.skip-link:focus {
+  top: 1rem;
 }

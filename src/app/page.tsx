@@ -1,28 +1,110 @@
-export default function Home() {
+import type { Route } from "next";
+import Link from "next/link";
+import { Container } from "@/components/container";
+import { HomeHero } from "@/components/home-hero";
+import { Stagger, StaggerItem } from "@/components/motion/stagger";
+import { SectionHeading } from "@/components/section-heading";
+import { getHomepageData } from "@/features/catalog/queries";
+
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const { vehicles, manufacturers, manufacturerCount, modelCount, vehicleCount } =
+    await getHomepageData();
+  const leadVehicle = vehicles[0];
+
+  const featuredLabel = leadVehicle
+    ? `${leadVehicle.modelYear.year} ${leadVehicle.modelYear.generation.model.manufacturer.name} ${leadVehicle.modelYear.generation.model.name} ${leadVehicle.name}`
+    : undefined;
+
   return (
-    <main className="relative flex min-h-dvh overflow-hidden px-4 py-4 sm:px-12 sm:py-8 lg:px-20">
-      <div className="absolute inset-0 [background-image:linear-gradient(var(--line)_1px,transparent_1px),linear-gradient(90deg,var(--line)_1px,transparent_1px)] [background-size:48px_48px] opacity-30" />
-      <div className="relative z-10 flex w-full min-w-0 flex-col justify-between border border-[var(--line)] p-5 sm:p-10">
-        <header className="flex w-full min-w-0 items-center justify-between gap-4 text-[10px] font-medium tracking-[0.14em] text-[var(--muted)] uppercase sm:text-xs sm:tracking-[0.18em]">
-          <span className="shrink-0">Redline Index</span>
-          <span className="shrink-0">Est. 2026</span>
-        </header>
-        <section className="w-full max-w-4xl min-w-0 py-16 sm:py-28 lg:py-36">
-          <p className="mb-5 font-mono text-[11px] tracking-[0.16em] text-[var(--signal)] uppercase sm:mb-6 sm:text-xs sm:tracking-[0.2em]">
-            The automotive database
-          </p>
-          <h1 className="max-w-none min-w-0 text-[clamp(2.75rem,12vw,8rem)] leading-[0.92] font-semibold tracking-[-0.065em] text-balance break-words sm:max-w-[12ch]">
-            Every number has a story.
-          </h1>
-          <p className="mt-6 max-w-xl text-base leading-7 text-pretty break-words text-[var(--muted)] sm:mt-8 sm:text-lg">
-            Redline Index is building a precise, living record of the machines that move
-            us—one verified vehicle at a time.
-          </p>
-        </section>
-        <footer className="flex w-full min-w-0 flex-col gap-2 border-t border-[var(--line)] pt-4 font-mono text-[10px] leading-5 tracking-[0.12em] text-[var(--muted)] uppercase sm:flex-row sm:justify-between sm:gap-3 sm:pt-5 sm:text-[11px] sm:tracking-[0.14em]">
-          <span>Database foundation in progress</span>
-          <span>Search · Compare · Preserve</span>
-        </footer>
+    <main>
+      <HomeHero
+        featuredHref={
+          leadVehicle ? (`/vehicles/${leadVehicle.slug}` as Route) : undefined
+        }
+        featuredLabel={featuredLabel}
+      />
+
+      {/* Soft handoff into silk; content sits below the first screen */}
+      <div className="relative z-[1] mt-10 pt-6 sm:mt-16 sm:pt-10">
+      <section className="border-b border-white/10">
+        <Container className="py-10 sm:py-12">
+          <dl>
+            <Stagger className="grid grid-cols-3 gap-6 sm:gap-10" delay={0.1}>
+              {[
+                [manufacturerCount, "Manufacturers"],
+                [modelCount, "Models"],
+                [vehicleCount, "Published trims"],
+              ].map(([value, label]) => (
+                <StaggerItem key={label as string}>
+                  <div>
+                    <dt className="font-mono text-[0.6rem] tracking-[0.14em] text-white/45 uppercase">
+                      {label}
+                    </dt>
+                    <dd className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-white sm:text-4xl">
+                      {value}
+                    </dd>
+                  </div>
+                </StaggerItem>
+              ))}
+            </Stagger>
+          </dl>
+        </Container>
+      </section>
+
+      <section>
+        <Container className="py-20 sm:py-24">
+          <SectionHeading
+            eyebrow="By marque"
+            title="Manufacturers"
+            action={
+              <Link
+                href="/manufacturers"
+                className="font-mono text-[0.65rem] tracking-[0.13em] text-white/45 uppercase transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+              >
+                View all →
+              </Link>
+            }
+          />
+          <Stagger
+            className="mt-10 divide-y divide-white/10 border-y border-white/10"
+            delay={0.05}
+          >
+            {manufacturers.map((manufacturer, index) => (
+              <StaggerItem key={manufacturer.id}>
+                <Link
+                  href={`/manufacturers/${manufacturer.slug}`}
+                  className="group grid gap-3 py-7 transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white sm:grid-cols-[4rem_1fr_auto] sm:items-center sm:gap-8"
+                >
+                  <span className="font-mono text-[0.65rem] tracking-[0.14em] text-white/40">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span>
+                    <span className="block text-3xl font-semibold tracking-[-0.03em] text-white sm:text-4xl">
+                      {manufacturer.name}
+                    </span>
+                    <span className="mt-1 block text-sm text-white/50">
+                      {[
+                        manufacturer.country,
+                        manufacturer.foundedIn
+                          ? `Founded ${manufacturer.foundedIn}`
+                          : undefined,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                  </span>
+                  <span className="font-mono text-[0.64rem] tracking-[0.12em] text-white/45 uppercase transition-colors group-hover:text-white">
+                    {manufacturer._count.models} model
+                    {manufacturer._count.models === 1 ? "" : "s"} →
+                  </span>
+                </Link>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </Container>
+      </section>
       </div>
     </main>
   );

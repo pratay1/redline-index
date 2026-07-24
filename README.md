@@ -30,7 +30,9 @@ Routes stay thin. Business rules belong in `src/features`; shared infrastructure
 
 ## Data and API foundation
 
-The schema models manufacturers, vehicles, imagery, source references, users, and audit logs. Vehicles include searchable manufacturer/model/year attributes plus normalized powertrain, performance, pricing, status, and publication fields. Database indexes support public filters from the beginning.
+The catalogue is normalized for long-lived automotive data: `Manufacturer → VehicleModel → VehicleGeneration → ModelYear → Vehicle` (a market-specific trim offering). Engines and transmissions are reusable records. Dimensions, performance, fuel economy, price history, and images are trim-level records rather than columns on one large table. `Source` and field-level `SourceCitation` records preserve provenance for individual facts. Users and audit logs remain independent from the catalogue hierarchy.
+
+Core catalogue records use restrictive foreign keys so a manufacturer, model, generation, model year, engine, or transmission cannot be deleted while it is still referenced. Trim-owned details (dimensions, performance, economy, prices, and images) cascade when a trim is deliberately removed. Sources are protected while citations reference them; image sources are retained as optional metadata.
 
 - `GET /api/vehicles` is the public, cached search endpoint. It accepts `q`, `make`, `year`, `bodyStyle`, `fuelType`, `limit`, and `cursor`.
 - `POST /api/admin/vehicles` is a protected editorial endpoint. It Zod-validates vehicle data, creates a manufacturer when needed, and records an audit event.
@@ -45,7 +47,8 @@ The schema models manufacturers, vehicles, imagery, source references, users, an
 4. Create a Clerk application and add its publishable key, secret key, and webhook signing secret.
 5. In Clerk, create a webhook for `https://your-domain.com/api/webhooks/clerk` and subscribe to `user.created`, `user.updated`, and `user.deleted`.
 6. Apply the schema with `npm run prisma:migrate`, then generate the client with `npm run prisma:generate`.
-7. Start the app with `npm run dev`.
+7. Optionally load the documented BMW sample with `npm run prisma:seed`.
+8. Start the app with `npm run dev`.
 
 After the first admin has signed in and the webhook has synced their row, promote that person deliberately:
 
@@ -68,6 +71,7 @@ Import the repository into Vercel. Set every variable from `.env.example` for Pr
 | `npm run prisma:validate` | Validate the Prisma schema                              |
 | `npm run prisma:migrate`  | Create and apply a development migration                |
 | `npm run prisma:deploy`   | Apply committed migrations in deployment                |
+| `npm run prisma:seed`     | Load the idempotent, source-linked BMW sample catalogue |
 
 ## Coding standards
 

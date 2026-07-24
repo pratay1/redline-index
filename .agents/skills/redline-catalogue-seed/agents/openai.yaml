@@ -1,0 +1,4 @@
+interface:
+  display_name: "Redline Catalogue Seed"
+  short_description: "Seed sourced US vehicle catalogue data"
+  default_prompt: "Use $redline-catalogue-seed to add the current US Toyota RAV4 trims."

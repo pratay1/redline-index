@@ -57,103 +57,285 @@ enum TransmissionType {
   SINGLE_SPEED
 }
 
+enum PriceType {
+  BASE_MSRP
+  DESTINATION_FEE
+  OPTION
+  OTHER
+}
+
+enum SourceType {
+  MANUFACTURER
+  GOVERNMENT
+  PRESS_RELEASE
+  OWNER_MANUAL
+  THIRD_PARTY
+}
+
 model User {
-  id String @id @default(cuid())
-  clerkId String @unique
-  email String? @unique
-  name String?
-  role UserRole @default(MEMBER)
-  deletedAt DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  authoredVehicles Vehicle[] @relation("VehicleAuthor")
-  auditLogs AuditLog[]
+  id               String     @id @default(cuid())
+  clerkId          String     @unique
+  email            String?    @unique
+  name             String?
+  role             UserRole   @default(MEMBER)
+  deletedAt        DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  authoredVehicles Vehicle[]  @relation("VehicleAuthor")
+  auditLogs        AuditLog[]
+
   @@index([role])
 }
 
 model Manufacturer {
-  id String @id @default(cuid())
-  name String
-  slug String @unique
-  country String?
+  id        String         @id @default(cuid())
+  name      String
+  slug      String         @unique
+  country   String?
   foundedIn Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  vehicles Vehicle[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  models    VehicleModel[]
+  engines   Engine[]
+
   @@index([name])
 }
 
-model Vehicle {
-  id String @id @default(cuid())
-  slug String @unique
+model VehicleModel {
+  id             String              @id @default(cuid())
   manufacturerId String
-  modelName String
-  trimName String?
-  generation String?
-  year Int
-  bodyStyle BodyStyle?
-  fuelType FuelType?
-  drivetrain Drivetrain?
-  transmission TransmissionType?
-  engineName String?
-  engineDisplacementCc Int?
-  cylinderCount Int?
-  induction String?
-  powerHp Int?
-  torqueLbFt Int?
-  zeroToSixtySeconds Float?
-  topSpeedMph Int?
-  curbWeightKg Int?
-  msrpCents Int?
-  description String?
-  status VehicleStatus @default(DRAFT)
-  publishedAt DateTime?
-  createdById String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  manufacturer Manufacturer @relation(fields: [manufacturerId], references: [id], onDelete: Restrict)
-  createdBy User @relation("VehicleAuthor", fields: [createdById], references: [id], onDelete: Restrict)
-  images VehicleImage[]
-  references VehicleReference[]
-  @@index([status, publishedAt])
-  @@index([manufacturerId, modelName, year])
+  name           String
+  slug           String              @unique
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  manufacturer   Manufacturer        @relation(fields: [manufacturerId], references: [id], onDelete: Restrict)
+  generations    VehicleGeneration[]
+
+  @@unique([manufacturerId, name])
+  @@index([manufacturerId])
+}
+
+model VehicleGeneration {
+  id          String       @id @default(cuid())
+  modelId     String
+  code        String
+  displayName String?
+  startYear   Int?
+  endYear     Int?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  model       VehicleModel @relation(fields: [modelId], references: [id], onDelete: Restrict)
+  modelYears  ModelYear[]
+
+  @@unique([modelId, code])
+  @@index([modelId, startYear])
+}
+
+model ModelYear {
+  id           String            @id @default(cuid())
+  generationId String
+  year         Int
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  generation   VehicleGeneration @relation(fields: [generationId], references: [id], onDelete: Restrict)
+  vehicles     Vehicle[]
+
+  @@unique([generationId, year])
   @@index([year])
-  @@index([bodyStyle])
-  @@index([fuelType])
+}
+
+model Engine {
+  id              String        @id @default(cuid())
+  manufacturerId  String?
+  slug            String        @unique
+  name            String
+  code            String?
+  fuelType        FuelType
+  displacementCc  Int?
+  cylinderCount   Int?
+  configuration   String?
+  induction       String?
+  electrification String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  manufacturer    Manufacturer? @relation(fields: [manufacturerId], references: [id], onDelete: Restrict)
+  vehicles        Vehicle[]
+
+  @@unique([manufacturerId, code])
+  @@index([manufacturerId, fuelType])
+  @@index([displacementCc])
+}
+
+model Transmission {
+  id        String           @id @default(cuid())
+  slug      String           @unique
+  name      String
+  type      TransmissionType
+  gearCount Int?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  vehicles  Vehicle[]
+
+  @@index([type])
+}
+
+/// A Vehicle is a market-specific trim offering for one model year.
+model Vehicle {
+  id             String              @id @default(cuid())
+  slug           String              @unique
+  modelYearId    String
+  name           String
+  market         String
+  bodyStyle      BodyStyle
+  drivetrain     Drivetrain
+  engineId       String
+  transmissionId String
+  description    String?
+  status         VehicleStatus       @default(DRAFT)
+  publishedAt    DateTime?
+  createdById    String
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  modelYear      ModelYear           @relation(fields: [modelYearId], references: [id], onDelete: Restrict)
+  engine         Engine              @relation(fields: [engineId], references: [id], onDelete: Restrict)
+  transmission   Transmission        @relation(fields: [transmissionId], references: [id], onDelete: Restrict)
+  createdBy      User                @relation("VehicleAuthor", fields: [createdById], references: [id], onDelete: Restrict)
+  dimensions     VehicleDimensions?
+  performance    VehiclePerformance?
+  fuelEconomy    VehicleFuelEconomy?
+  prices         VehiclePrice[]
+  images         VehicleImage[]
+
+  @@unique([modelYearId, name, market, bodyStyle, drivetrain, engineId, transmissionId])
+  @@index([status, publishedAt])
+  @@index([modelYearId])
+  @@index([engineId])
+  @@index([transmissionId])
+  @@index([market, bodyStyle, drivetrain])
+}
+
+model VehicleDimensions {
+  id                   String   @id @default(cuid())
+  vehicleId            String   @unique
+  lengthIn             Float?
+  widthIn              Float?
+  heightIn             Float?
+  wheelbaseIn          Float?
+  frontTrackIn         Float?
+  rearTrackIn          Float?
+  groundClearanceIn    Float?
+  curbWeightKg         Int?
+  grossVehicleWeightKg Int?
+  cargoVolumeLiters    Float?
+  seatingCapacity      Int?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  vehicle              Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+}
+
+model VehiclePerformance {
+  id                 String   @id @default(cuid())
+  vehicleId          String   @unique
+  powerHp            Int?
+  torqueLbFt         Int?
+  zeroToSixtySeconds Float?
+  quarterMileSeconds Float?
+  topSpeedMph        Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  vehicle            Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
   @@index([powerHp])
 }
 
-model VehicleImage {
-  id String @id @default(cuid())
-  vehicleId String
-  url String
-  alt String
-  position Int @default(0)
-  createdAt DateTime @default(now())
-  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  @@unique([vehicleId, position])
+model VehicleFuelEconomy {
+  id                 String   @id @default(cuid())
+  vehicleId          String   @unique
+  cityMpg            Float?
+  highwayMpg         Float?
+  combinedMpg        Float?
+  electricRangeMiles Float?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  vehicle            Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
 }
 
-model VehicleReference {
-  id String @id @default(cuid())
+model VehiclePrice {
+  id          String    @id @default(cuid())
+  vehicleId   String
+  market      String
+  type        PriceType
+  amountCents Int
+  currency    String    @default("USD")
+  effectiveAt DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  vehicle     Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([vehicleId, market, type, effectiveAt])
+  @@index([market, currency])
+}
+
+model VehicleImage {
+  id        String   @id @default(cuid())
   vehicleId String
-  sourceName String
-  sourceUrl String
-  accessedAt DateTime?
+  sourceId  String?
+  url       String
+  alt       String
+  credit    String?
+  position  Int      @default(0)
   createdAt DateTime @default(now())
-  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
-  @@unique([vehicleId, sourceUrl])
+  vehicle   Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  source    Source?  @relation(fields: [sourceId], references: [id], onDelete: SetNull)
+
+  @@unique([vehicleId, position])
+  @@index([sourceId])
+}
+
+model Source {
+  id          String           @id @default(cuid())
+  slug        String           @unique
+  title       String
+  publisher   String
+  url         String           @unique
+  type        SourceType
+  publishedAt DateTime?
+  accessedAt  DateTime         @default(now())
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  images      VehicleImage[]
+  citations   SourceCitation[]
+
+  @@index([publisher, type])
+}
+
+/// Field-level source metadata. entityType/entityId form an intentional polymorphic
+/// association so a citation can target any catalogue entity without duplicating it.
+model SourceCitation {
+  id         String   @id @default(cuid())
+  sourceId   String
+  entityType String
+  entityId   String
+  fieldName  String
+  locator    String?
+  note       String?
+  createdAt  DateTime @default(now())
+  source     Source   @relation(fields: [sourceId], references: [id], onDelete: Restrict)
+
+  @@unique([sourceId, entityType, entityId, fieldName])
+  @@index([entityType, entityId])
 }
 
 model AuditLog {
-  id String @id @default(cuid())
-  actorId String
-  action String
+  id         String   @id @default(cuid())
+  actorId    String
+  action     String
   entityType String
-  entityId String
-  metadata Json?
-  createdAt DateTime @default(now())
-  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  entityId   String
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  actor      User     @relation(fields: [actorId], references: [id], onDelete: Restrict)
+
   @@index([entityType, entityId])
   @@index([actorId, createdAt])
 }
