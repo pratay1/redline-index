@@ -206,6 +206,10 @@ export const getVehicleBySlug = cache(async (slug: string) => {
     ...(vehicle.fuelEconomy
       ? [{ entityType: "VehicleFuelEconomy", entityId: vehicle.fuelEconomy.id }]
       : []),
+    ...vehicle.images.map((image) => ({
+      entityType: "VehicleImage",
+      entityId: image.id,
+    })),
     ...vehicle.prices.map((price) => ({
       entityType: "VehiclePrice",
       entityId: price.id,

@@ -36,6 +36,28 @@ import { seedPorsche918 } from "./seed/porsche-918";
 import { seedPorscheSuv } from "./seed/porsche-suv";
 import { ensurePorscheManufacturer } from "./seed/porsche-shared";
 import { seedPorscheSedanEv } from "./seed/porsche-sedan-ev";
+import { seedFerrari458 } from "./seed/ferrari-458";
+import { seedFerrari488 } from "./seed/ferrari-488";
+import { seedFerrari812Monza } from "./seed/ferrari-812-monza";
+import { seedFerrariCaliforniaFf } from "./seed/ferrari-california-ff";
+import { seedFerrariCurrent } from "./seed/ferrari-current";
+import { seedFerrariF12LaFerrari } from "./seed/ferrari-f12-laferrari";
+import { seedFerrariF8Sf90 } from "./seed/ferrari-f8-sf90";
+import { seedFerrariGtc4PortofinoRoma } from "./seed/ferrari-gtc4-portofino-roma";
+import { ensureFerrariManufacturer } from "./seed/ferrari-shared";
+import { seedHondaAccord } from "./seed/honda-accord";
+import { seedHondaCivic } from "./seed/honda-civic";
+import { seedHondaCompact } from "./seed/honda-compact";
+import { ensureHondaManufacturer } from "./seed/honda-shared";
+import { seedHondaSuv } from "./seed/honda-suv";
+import { seedHondaVanTruck } from "./seed/honda-van-truck";
+import { seedLamborghiniAventador } from "./seed/lamborghini-aventador";
+import { seedLamborghiniHuracanEarly } from "./seed/lamborghini-huracan-early";
+import { seedLamborghiniHuracanLate } from "./seed/lamborghini-huracan-late";
+import { seedLamborghiniHypercars } from "./seed/lamborghini-hypercars";
+import { seedLamborghiniRevueltoTemerario } from "./seed/lamborghini-revuelto-temerario";
+import { ensureLamborghiniManufacturer } from "./seed/lamborghini-shared";
+import { seedLamborghiniUrus } from "./seed/lamborghini-urus";
 import { seedTeslaCurrentLineup } from "./seed/tesla-current-lineup";
 import { ensureTeslaManufacturer } from "./seed/tesla-shared";
 import { seedToyotaSedans } from "./seed/toyota-sedans";
@@ -76,6 +98,9 @@ async function main() {
   const audi = await ensureAudiManufacturer(prisma);
   const porsche = await ensurePorscheManufacturer(prisma);
   const toyota = await ensureToyotaManufacturer(prisma);
+  const honda = await ensureHondaManufacturer(prisma);
+  const ferrari = await ensureFerrariManufacturer(prisma);
+  const lamborghini = await ensureLamborghiniManufacturer(prisma);
   const tesla = await ensureTeslaManufacturer(prisma);
 
   const bmwCtx: SeedCtx = {
@@ -110,6 +135,27 @@ async function main() {
     prisma,
     importerId: importer.id,
     manufacturerId: toyota.id,
+    pricingDate: PRICING_DATE,
+  };
+
+  const hondaCtx: SeedCtx = {
+    prisma,
+    importerId: importer.id,
+    manufacturerId: honda.id,
+    pricingDate: PRICING_DATE,
+  };
+
+  const ferrariCtx: SeedCtx = {
+    prisma,
+    importerId: importer.id,
+    manufacturerId: ferrari.id,
+    pricingDate: PRICING_DATE,
+  };
+
+  const lamborghiniCtx: SeedCtx = {
+    prisma,
+    importerId: importer.id,
+    manufacturerId: lamborghini.id,
     pricingDate: PRICING_DATE,
   };
 
@@ -212,6 +258,61 @@ async function main() {
     const result = await run();
     console.log(
       `Toyota ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
+    );
+    if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
+    if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
+  }
+
+  const hondaJobs: Array<[string, () => Promise<{ seeded: string[]; skipped: string[] }>]> = [
+    ["Accord", () => seedHondaAccord(hondaCtx)],
+    ["Civic", () => seedHondaCivic(hondaCtx)],
+    ["Compact", () => seedHondaCompact(hondaCtx)],
+    ["SUV", () => seedHondaSuv(hondaCtx)],
+    ["Van/truck", () => seedHondaVanTruck(hondaCtx)],
+  ];
+
+  for (const [name, run] of hondaJobs) {
+    const result = await run();
+    console.log(
+      `Honda ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
+    );
+    if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
+    if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
+  }
+
+  const ferrariJobs: Array<[string, () => Promise<{ seeded: string[]; skipped: string[] }>]> = [
+    ["458", () => seedFerrari458(ferrariCtx)],
+    ["California/FF", () => seedFerrariCaliforniaFf(ferrariCtx)],
+    ["F12/LaFerrari", () => seedFerrariF12LaFerrari(ferrariCtx)],
+    ["488", () => seedFerrari488(ferrariCtx)],
+    ["GTC4/Portofino/Roma", () => seedFerrariGtc4PortofinoRoma(ferrariCtx)],
+    ["812/Monza", () => seedFerrari812Monza(ferrariCtx)],
+    ["F8/SF90", () => seedFerrariF8Sf90(ferrariCtx)],
+    ["Current", () => seedFerrariCurrent(ferrariCtx)],
+  ];
+
+  for (const [name, run] of ferrariJobs) {
+    const result = await run();
+    console.log(
+      `Ferrari ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
+    );
+    if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
+    if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
+  }
+
+  const lamborghiniJobs: Array<[string, () => Promise<{ seeded: string[]; skipped: string[] }>]> = [
+    ["Huracan early", () => seedLamborghiniHuracanEarly(lamborghiniCtx)],
+    ["Huracan late", () => seedLamborghiniHuracanLate(lamborghiniCtx)],
+    ["Aventador", () => seedLamborghiniAventador(lamborghiniCtx)],
+    ["Hypercars", () => seedLamborghiniHypercars(lamborghiniCtx)],
+    ["Urus", () => seedLamborghiniUrus(lamborghiniCtx)],
+    ["Revuelto/Temerario", () => seedLamborghiniRevueltoTemerario(lamborghiniCtx)],
+  ];
+
+  for (const [name, run] of lamborghiniJobs) {
+    const result = await run();
+    console.log(
+      `Lamborghini ${name}: seeded ${result.seeded.length}, skipped ${result.skipped.length}`,
     );
     if (result.seeded.length > 0) console.log(`  Seeded: ${result.seeded.join(", ")}`);
     if (result.skipped.length > 0) console.log(`  Skipped: ${result.skipped.join("; ")}`);
